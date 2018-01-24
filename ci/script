@@ -40,9 +40,10 @@ main() {
     fi
 
     if [ -z "$IGNORE_COMPILE_TEST" ]; then
-        if ! cross --manifest-path compile-test/Cargo.toml \
-                    --target $TARGET \
-                    --no-fail-fast; then
+        if ! cross test \
+                   --manifest-path compile-test/Cargo.toml \
+                   --target $TARGET \
+                   --no-fail-fast; then
             ret=1
         fi
     fi
