@@ -14,6 +14,7 @@ main() {
     cross="$dir/cross-test"
 
     mkdir -p "$dir/../compile-test/tests/run-pass-failing/panic-runtime"
+    mkdir -p "$dir/../compile-test/tests/run-pass-failing/union"
     args="$($dir/args $TARGET)"
 
     if [ -f "$dir/../docker/$TARGET/Dockerfile" ]; then
@@ -23,18 +24,21 @@ main() {
     set +e
 
     ret=0
+    crates="-p alloc -p core -p std -p std_unicode"
     if [ -z "$IGNORE" ]; then
-        if ! $cross --manifest-path std/Cargo.toml \
-                    --target $TARGET \
-                    --no-fail-fast \
-                    -- $args; then
+        if ! cross test --lib \
+                   $crates \
+                   --target $TARGET \
+                   --no-fail-fast \
+                   -- $args; then
             ret=1
         fi
-        if ! $cross --manifest-path std/Cargo.toml \
-                    --target $TARGET \
-                    --release \
-                    --no-fail-fast \
-                    -- $args; then
+        if ! cross test --lib \
+                   $crates \
+                   --target $TARGET \
+                   --release \
+                   --no-fail-fast \
+                   -- $args; then
             ret=1
         fi
     fi

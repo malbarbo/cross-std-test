@@ -1,5 +1,8 @@
 [workspace]
 members = [
     "compile-test",
-    "std"
+    "alloc",
+    "core",
+    "std",
+    "std_unicode",
 ]

@@ -1,9 +1,9 @@
 [package]
-name = "std"
+name = "alloc"
 version = "0.1.0"
 
 [lib]
-path = "/rust/lib/rustlib/src/rust/src/libstd/lib.rs"
+path = "/rust/lib/rustlib/src/rust/src/liballoc/lib.rs"
 
 [dependencies]
 rand = "0.3"
