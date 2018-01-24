@@ -78,6 +78,9 @@ general = {
 }
 
 general_run_pass = {
+    'arm-unknown-linux-gnueabi': [
+        'intrinsics-math.rs', # '0 is not approximately equal to 2.718281828459045'
+    ],
     'mips-unknown-linux-gnu': [
         'i128.rs',
         'next-power-of-two-overflow-ndebug.rs',
