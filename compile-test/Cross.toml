@@ -1,8 +1,5 @@
 [build.env]
 passthrough = [
-    "ANDROID_DNS_MODE",
-    # FIXME: Remove when https://github.com/japaric/cross/pull/170 got released
-    "CARGO_TARGET_I686_LINUX_ANDROID_RUNNER",
     "COMPILE_TEST_FILTER",
     "RUST_BACKTRACE",
 ]

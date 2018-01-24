@@ -2,12 +2,6 @@
 
 set -x
 
-# FIXME: Remove when https://github.com/japaric/cross/pull/171 got release
-export ANDROID_DNS_MODE=local
-
-# FIXME: Remove when https://github.com/japaric/cross/pull/170 got released
-export CARGO_TARGET_I686_LINUX_ANDROID_RUNNER="qemu-i386 -cpu n270"
-
 main() {
     if [ ! -z $DISABLE_TESTS ]; then
         return
@@ -21,6 +15,10 @@ main() {
 
     mkdir -p "$dir/../compile-test/tests/run-pass-failing"
     args="$($dir/args $TARGET)"
+
+    if [ -f "$dir/../docker/$TARGET/Dockerfile" ]; then
+        docker build -t japaric/$TARGET -f "$dir/../docker/$TARGET/Dockerfile" "$dir/../docker"
+    fi
 
     set +e
 
