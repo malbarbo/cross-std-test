@@ -6,6 +6,7 @@ def main():
     target = sys.argv[1]
 
     # the test needs to be fixed to be run with cross
+    # FIXME: fix upstream
     run_pass_failing(['env-home-dir.rs'])
 
     if not is_native(target):
@@ -57,11 +58,17 @@ qemu_run_pass = [
     'segfault-no-out-of-stack.rs',
     'signal-exit-status.rs',
     'sigpipe-should-be-ignored.rs',
+    'stack-probes-lto.rs',
+    'stack-probes.rs',
     'stdio-is-blocking.rs',
     'try-wait.rs',
 ]
 
 general = {
+    'arm-unknown-linux-gnueabi': [
+        'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
+        'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
+    ],
     'i586-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
@@ -70,16 +77,25 @@ general = {
     'i686-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
+        'f64::tests::test_mul_add', # left: `NaN`, right: `inf`
     ],
     'i686-unknown-linux-musl': [
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
     ],
+    'mips64-unknown-linux-gnuabi64': [
+        'f32::tests::test_powi', # 34.81 is not approximately equal to 0.028727
+        'f64::tests::test_powi', # 34.81 is not approximately equal to 0.028727
+    ],
+    'mips64el-unknown-linux-gnuabi64': [
+        'f32::tests::test_powi', # 34.81 is not approximately equal to 0.028727
+        'f64::tests::test_powi', # 34.81 is not approximately equal to 0.028727
+    ],
 }
 
 general_run_pass = {
     'arm-unknown-linux-gnueabi': [
-        'intrinsics-math.rs', # '0 is not approximately equal to 2.718281828459045'
+        'intrinsics-math.rs', # 0 is not approximately equal to 2.718281828459045
     ],
     'mips-unknown-linux-gnu': [
         'i128.rs',
@@ -100,10 +116,9 @@ general_run_pass = {
         'extern-return-TwoU32s.rs',
         'extern-return-TwoU64s.rs',
         'extern-return-TwoU8s.rs',
-        'stack-probes-lto.rs',
-        'stack-probes.rs',
+        'intrinsics-math.rs', # 625 is not approximately equal to 0.0016
         'struct-return.rs',
-        'union/union-c-interop.rs',
+        'union/union-c-interop.rs', # left: `8589934595`, right: `8471728`
     ],
     'mips64el-unknown-linux-gnuabi64': [
         'extern-pass-TwoU16s.rs',
@@ -114,26 +129,23 @@ general_run_pass = {
         'extern-return-TwoU32s.rs',
         'extern-return-TwoU64s.rs',
         'extern-return-TwoU8s.rs',
-        'stack-probes-lto.rs',
-        'stack-probes.rs',
+        'intrinsics-math.rs', # 625 is not approximately equal to 0.0016
         'struct-return.rs',
-        'union/union-c-interop.rs',
+        'union/union-c-interop.rs', # left: `8589934595`, right: `274877906944`
     ],
     'powerpc-unknown-linux-gnu': [
-        'extern-pass-TwoU16s.rs',
-        'extern-pass-TwoU32s.rs',
-        'extern-pass-TwoU64s.rs',
-        'extern-pass-TwoU8s.rs',
-        'extern-return-TwoU16s.rs',
-        'extern-return-TwoU32s.rs',
-        'extern-return-TwoU64s.rs',
-        'extern-return-TwoU8s.rs',
-        'foreign-fn-with-byval.rs',
-        'panic-handler-flail-wildly.rs',
+        'conditional-compile-arch.rs', # FIXME: fix upstream
+        'extern-pass-empty.rs', # segfault
+        'issue-28676.rs', # segfault
+        'union/union-c-interop.rs', # segfault
+    ],
+    'powerpc64-unknown-linux-gnu': [
         'stack-probes-lto.rs',
         'stack-probes.rs',
-        'struct-return.rs',
-        'union/union-c-interop.rs',
+    ],
+    'powerpc64le-unknown-linux-gnu': [
+        'saturating-float-casts.rs', # left: `255`, right: `0`
+        'simd-intrinsic-generic-cast.rs', # f64 -> i32 (i32x4(-1234567, 12345678, -123456792, 1234567936) != i32x4(-1234567, 12345678, -123456789, 1234567890))
     ],
 }
 
