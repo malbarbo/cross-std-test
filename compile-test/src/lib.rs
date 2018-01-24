@@ -12,11 +12,6 @@ mod tests {
     }
 
     #[test]
-    fn run_pass_failing() {
-        run("run-fail", "run-pass-failing");
-    }
-
-    #[test]
     fn run_fail() {
         run("run-fail", "run-fail");
     }
