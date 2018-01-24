@@ -74,6 +74,10 @@ general = {
         'f64::tests::test_float_bits_conv',
         'f64::tests::test_mul_add',
     ],
+    'i586-unknown-linux-musl': [
+        'f32::tests::test_float_bits_conv', # left: `2144687445`,  right: `2140493141`
+        'f64::tests::test_float_bits_conv', # left: `9221870836978985642`, right: `9219619037165300394`
+    ],
     'i686-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
@@ -91,6 +95,11 @@ general = {
         'f32::tests::test_powi', # 34.81 is not approximately equal to 0.028727
         'f64::tests::test_powi', # 34.81 is not approximately equal to 0.028727
     ],
+    'powerpc64le-unknown-linux-gnu': [
+        'iter::test_lt', # assertion failed: a.iter().gt(b.iter()) == (a[0] > b[0])
+        'option::test_ord', # assertion failed: !(nan > big)
+        'tuple::test_tuple_cmp', # assertion failed: !((1.0f64, 2.0f64) > (nan, 3.0))
+    ]
 }
 
 general_run_pass = {
@@ -136,7 +145,13 @@ general_run_pass = {
     'powerpc-unknown-linux-gnu': [
         'conditional-compile-arch.rs', # FIXME: fix upstream
         'extern-pass-empty.rs', # segfault
+        'extern-pass-TwoU16s.rs', # segfault
+        'extern-pass-TwoU32s.rs', # segfault
+        'extern-pass-TwoU64s.rs', # segfault
+        'extern-pass-TwoU8s.rs', # segfault
+        'foreign-fn-with-byval.rs', # segfault
         'issue-28676.rs', # segfault
+        'struct-return.rs', # segfault
         'union/union-c-interop.rs', # segfault
     ],
     'powerpc64-unknown-linux-gnu': [
