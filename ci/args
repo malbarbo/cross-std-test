@@ -157,13 +157,8 @@ def is_native(target):
         "android" not in target
 
 
-first = True
-
 def skip(cases):
-    global first
-    if first:
-        print("--skip ", end="")
-        first = False
+    print("--skip ", end="")
     print(" --skip ".join(cases), end="")
 
 
