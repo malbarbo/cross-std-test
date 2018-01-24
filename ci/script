@@ -18,7 +18,13 @@ main() {
     args="$($dir/args $TARGET)"
 
     if [ -f "$dir/../docker/$TARGET/Dockerfile" ]; then
-        docker build -t japaric/$TARGET -f "$dir/../docker/$TARGET/Dockerfile" "$dir/../docker"
+        tag=$(git ls-remote --tags --refs --exit-code https://github.com/japaric/cross \
+                | cut -d/ -f3 \
+                | grep -E '^v[0.1.0-9.]+$' \
+                | $sort --version-sort \
+                | tail -n1)
+
+        docker build -t japaric/$TARGET:$tag -f "$dir/../docker/$TARGET/Dockerfile" "$dir/../docker"
     fi
 
     set +e
