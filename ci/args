@@ -19,6 +19,9 @@ def main():
     if target in general_run_pass:
         run_pass_failing(general_run_pass[target])
 
+    if 'android' in target:
+        run_pass_failing(android_run_pass)
+
 
 qemu = [
     'net::tcp::tests::multiple_connect_interleaved_greedy_schedule',
@@ -65,6 +68,12 @@ qemu_run_pass = [
 ]
 
 general = {
+    'aarch64-linux-android': [
+        'process::tests::test_add_to_env',
+        'process::tests::test_capture_env_at_spawn',
+        'process::tests::test_inherit_env',
+        'process::tests::test_override_env',
+    ],
     'arm-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
@@ -102,7 +111,25 @@ general = {
     ]
 }
 
+android_run_pass = [
+    'abort-on-c-abi.rs',
+    'atomic-print.rs',
+    'core-run-destroy.rs',
+    'issue-10626.rs',
+    'issue-33770.rs',
+    'panic-runtime/abort-link-to-unwinding-crates.rs',
+    'panic-runtime/abort.rs',
+    'panic-runtime/lto-abort.rs'
+    'process-envs.rs',
+    'process-exit.rs',
+    'process-remove-from-env.rs',
+    'running-with-no-runtime.rs',
+]
+
 general_run_pass = {
+    'aarch64-linux-android': [
+        'signal-alternate-stack-cleanup.rs', # fails to build SA_SIGINFO | SA_ONSTACK; expected u32, found u64
+    ],
     'arm-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 0 is not approximately equal to 2.718281828459045
     ],
