@@ -5,6 +5,9 @@ import sys
 def main():
     target = sys.argv[1]
 
+    # the test needs to be fixed to be run with cross
+    run_pass_failing(['env-home-dir.rs'])
+
     if not is_native(target):
         skip(qemu)
         run_pass_failing(qemu_run_pass)
@@ -24,6 +27,7 @@ qemu = [
     'process::tests::uid_to_root_fails',
     'process::tests::uid_works',
     'sys::unix::ext::net::test::timeouts',
+    'collections::hash::map::test_map::test_lots_of_insertions', # takes too long
     'stress',
 ]
 
