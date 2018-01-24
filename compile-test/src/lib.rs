@@ -13,7 +13,7 @@ mod tests {
 
     #[test]
     fn run_pass_failing() {
-        run("run-pass", "run-pass-failing");
+        run("run-fail", "run-pass-failing");
     }
 
     #[test]
