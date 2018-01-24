@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["malbarbo"]
 
 [dependencies]
-compiletest_rs = "0.3.3"
+compiletest_rs = { git = "https://github.com/malbarbo/compiletest-rs", branch = "android-no-device" }
 
 [build-dependencies]
 cc = "1.0"
