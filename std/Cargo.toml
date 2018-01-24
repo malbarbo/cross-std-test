@@ -1,0 +1,10 @@
+[package]
+name="alloc"
+version="0.1.0"
+
+[lib]
+path="/rust/lib/rustlib/src/rust/src/liballoc//lib.rs"
+
+[dependencies]
+rand = "0.3"
+libc = "0.2"

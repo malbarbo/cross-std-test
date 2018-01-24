@@ -1,0 +1,49 @@
+dist: trusty
+language: rust
+rust: nightly-2018-01-23
+services: docker
+sudo: required
+matrix:
+    include:
+        # Linux
+        - env: TARGET=x86_64-unknown-linux-gnu
+        - env: TARGET=aarch64-unknown-linux-gnu
+        - env: TARGET=arm-unknown-linux-gnueabi
+        - env: TARGET=arm-unknown-linux-musleabi IGNORE_COMPILE_TEST=1
+        - env: TARGET=armv7-unknown-linux-gnueabihf
+        - env: TARGET=armv7-unknown-linux-musleabihf IGNORE_COMPILE_TEST=1
+        - env: TARGET=i586-unknown-linux-gnu IGNORE_COMPILE_TEST=1
+        - env: TARGET=i686-unknown-linux-gnu
+        - env: TARGET=i686-unknown-linux-musl IGNORE_COMPILE_TEST=1
+        - env: TARGET=mips-unknown-linux-gnu
+        - env: TARGET=mipsel-unknown-linux-gnu
+        - env: TARGET=mips64-unknown-linux-gnuabi64
+        - env: TARGET=mips64el-unknown-linux-gnuabi64
+        - env: TARGET=powerpc-unknown-linux-gnu
+        - env: TARGET=powerpc64-unknown-linux-gnu
+        - env: TARGET=powerpc64le-unknown-linux-gnu
+        # - env: TARGET=sparc64-unknown-linux-gnu
+        # - env: TARGET=s390x-unknown-linux-gnu
+        - env: TARGET=x86_64-unknown-linux-musl IGNORE_COMPILE_TEST=1
+
+        # Android
+        - env: TARGET=aarch64-linux-android IGNORE_COMPILE_TEST=1
+        - env: TARGET=armv7-linux-androideabi IGNORE_COMPILE_TEST=1
+        - env: TARGET=i686-linux-android IGNORE_COMPILE_TEST=1
+        - env: TARGET=x86_64-linux-android IGNORE_COMPILE_TEST=1
+
+        # TODO: add windows
+
+before_install:
+    - set -e
+    - rustup self update
+    - rustup component add rust-src
+    - echo '{"ipv6":true,"fixed-cidr-v6":"2001:db8:1::/64"}' | sudo tee /etc/docker/daemon.json
+    - sudo service docker restart
+
+install:
+    - bash ci/install.sh
+    - source ~/.cargo/env || true
+
+script:
+    - ci/script $TARGET

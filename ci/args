@@ -1,0 +1,162 @@
+#!/usr/bin/python3
+
+import sys
+
+def main():
+    target = sys.argv[1]
+
+    if not is_native(target):
+        skip(qemu)
+        run_pass_failing(qemu_run_pass)
+
+    if target in general:
+        skip(general[target])
+
+    if target in general_run_pass:
+        run_pass_failing(general_run_pass[target])
+
+
+qemu = [
+    'net::tcp::tests::multiple_connect_interleaved_greedy_schedule',
+    'net::tcp::tests::multiple_connect_interleaved_lazy_schedule',
+    'net::tcp::tests::timeouts',
+    'net::udp::tests::timeouts',
+    'process::tests::uid_to_root_fails',
+    'process::tests::uid_works',
+    'sys::unix::ext::net::test::timeouts',
+    'stress',
+]
+
+qemu_run_pass = [
+    'backtrace-debuginfo.rs',
+    'backtrace.rs',
+    'command-before-exec.rs',
+    'command-exec.rs',
+    'env-args-reverse-iterator.rs',
+    'env-funky-keys.rs',  # QEMU_LD_PREFIX is empty
+    'fds-are-cloexec.rs',
+    'issue-13304.rs',
+    'issue-14456.rs',
+    'issue-14940.rs',
+    'issue-16272.rs',
+    'issue-20091.rs',
+    'issue-24313.rs',
+    'issue-30490.rs',
+    'multi-panic.rs',
+    'no-stdio.rs',
+    'out-of-stack.rs',
+    'panic-runtime/lto-unwind.rs',
+    'print-stdout-eprint-stderr.rs',
+    'process-sigpipe.rs',
+    'process-spawn-with-unicode-params.rs',
+    'process-status-inherits-stdin.rs',
+    'segfault-no-out-of-stack.rs',
+    'signal-exit-status.rs',
+    'sigpipe-should-be-ignored.rs',
+    'stdio-is-blocking.rs',
+    'try-wait.rs',
+]
+
+general = {
+    'i586-unknown-linux-gnu': [
+        'f32::tests::test_float_bits_conv',
+        'f64::tests::test_float_bits_conv',
+        'f64::tests::test_mul_add',
+    ],
+    'i686-unknown-linux-gnu': [
+        'f32::tests::test_float_bits_conv',
+        'f64::tests::test_float_bits_conv',
+    ],
+    'i686-unknown-linux-musl': [
+        'f32::tests::test_float_bits_conv',
+        'f64::tests::test_float_bits_conv',
+    ],
+}
+
+general_run_pass = {
+    'mips-unknown-linux-gnu': [
+        'i128.rs',
+        'next-power-of-two-overflow-ndebug.rs',
+        'u128.rs',
+    ],
+    'mipsel-unknown-linux-gnu': [
+        'i128.rs',
+        'next-power-of-two-overflow-ndebug.rs',
+        'u128.rs',
+    ],
+    'mips64-unknown-linux-gnuabi64': [
+        'extern-pass-TwoU16s.rs',
+        'extern-pass-TwoU32s.rs',
+        'extern-pass-TwoU64s.rs',
+        'extern-pass-TwoU8s.rs',
+        'extern-return-TwoU16s.rs',
+        'extern-return-TwoU32s.rs',
+        'extern-return-TwoU64s.rs',
+        'extern-return-TwoU8s.rs',
+        'stack-probes-lto.rs',
+        'stack-probes.rs',
+        'struct-return.rs',
+        'union/union-c-interop.rs',
+    ],
+    'mips64el-unknown-linux-gnuabi64': [
+        'extern-pass-TwoU16s.rs',
+        'extern-pass-TwoU32s.rs',
+        'extern-pass-TwoU64s.rs',
+        'extern-pass-TwoU8s.rs',
+        'extern-return-TwoU16s.rs',
+        'extern-return-TwoU32s.rs',
+        'extern-return-TwoU64s.rs',
+        'extern-return-TwoU8s.rs',
+        'stack-probes-lto.rs',
+        'stack-probes.rs',
+        'struct-return.rs',
+        'union/union-c-interop.rs',
+    ],
+    'powerpc-unknown-linux-gnu': [
+        'extern-pass-TwoU16s.rs',
+        'extern-pass-TwoU32s.rs',
+        'extern-pass-TwoU64s.rs',
+        'extern-pass-TwoU8s.rs',
+        'extern-return-TwoU16s.rs',
+        'extern-return-TwoU32s.rs',
+        'extern-return-TwoU64s.rs',
+        'extern-return-TwoU8s.rs',
+        'foreign-fn-with-byval.rs',
+        'panic-handler-flail-wildly.rs',
+        'stack-probes-lto.rs',
+        'stack-probes.rs',
+        'struct-return.rs',
+        'union/union-c-interop.rs',
+    ],
+}
+
+
+def is_native(target):
+    return (target.startswith("i586") or
+            target.startswith("i686") or
+            target.startswith("x86_64")) and \
+        "android" not in target
+
+
+first = True
+
+def skip(cases):
+    global first
+    if first:
+        print("--skip ", end="")
+        first = False
+    print(" --skip ".join(cases), end="")
+
+
+def run_pass_failing(cases):
+    import os
+    dir = os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/'
+    for case in cases:
+        try:
+            os.rename(dir + case, dir + '../run-pass-failing/' + case)
+        except:
+            pass
+
+
+if __name__ == "__main__":
+    main()

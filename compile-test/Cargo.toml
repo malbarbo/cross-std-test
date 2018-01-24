@@ -1,0 +1,10 @@
+[package]
+name = "compile-test"
+version = "0.1.0"
+authors = ["malbarbo"]
+
+[dependencies]
+compiletest_rs = "0.3.3"
+
+[build-dependencies]
+cc = "1.0"
