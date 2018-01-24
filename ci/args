@@ -173,7 +173,7 @@ def is_native(target):
 
 
 def skip(cases):
-    print("--skip ", end="")
+    print(" --skip ", end="")
     print(" --skip ".join(cases), end="")
 
 
