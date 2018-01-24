@@ -6,33 +6,66 @@ sudo: required
 matrix:
     include:
         # Linux
-        - env: TARGET=x86_64-unknown-linux-gnu
         - env: TARGET=aarch64-unknown-linux-gnu
         - env: TARGET=arm-unknown-linux-gnueabi
-        - env: TARGET=arm-unknown-linux-musleabi IGNORE_COMPILE_TEST=1
+        # - env: TARGET=arm-unknown-linux-gnueabihf
+        # - env: TARGET=armv4t-unknown-linux-gnueabi
+        # - env: TARGET=armv5te-unknown-linux-gnueabi
         - env: TARGET=armv7-unknown-linux-gnueabihf
-        - env: TARGET=armv7-unknown-linux-musleabihf IGNORE_COMPILE_TEST=1
-        - env: TARGET=i586-unknown-linux-gnu IGNORE_COMPILE_TEST=1
+        - env: TARGET=i586-unknown-linux-gnu
         - env: TARGET=i686-unknown-linux-gnu
-        - env: TARGET=i686-unknown-linux-musl IGNORE_COMPILE_TEST=1
-        - env: TARGET=mips-unknown-linux-gnu
-        - env: TARGET=mipsel-unknown-linux-gnu
-        - env: TARGET=mips64-unknown-linux-gnuabi64
         - env: TARGET=mips64el-unknown-linux-gnuabi64
-        - env: TARGET=powerpc-unknown-linux-gnu
-        - env: TARGET=powerpc64-unknown-linux-gnu
+        - env: TARGET=mips64-unknown-linux-gnuabi64
+        - env: TARGET=mipsel-unknown-linux-gnu
+        - env: TARGET=mips-unknown-linux-gnu
         - env: TARGET=powerpc64le-unknown-linux-gnu
-        # - env: TARGET=sparc64-unknown-linux-gnu
+        - env: TARGET=powerpc64-unknown-linux-gnu
+        - env: TARGET=powerpc-unknown-linux-gnu
         # - env: TARGET=s390x-unknown-linux-gnu
-        - env: TARGET=x86_64-unknown-linux-musl IGNORE_COMPILE_TEST=1
+        # - env: TARGET=sparc64-unknown-linux-gnu
+        - env: TARGET=x86_64-unknown-linux-gnu
+        # - env: TARGET=x86_64-unknown-linux-gnux32
+
+        # musl
+        # - env: TARGET=aarch64-unknown-linux-musl
+        - env: TARGET=arm-unknown-linux-musleabi
+        # - env: TARGET=arm-unknown-linux-musleabihf
+        - env: TARGET=armv7-unknown-linux-musleabihf
+        # - env: TARGET=i586-unknown-linux-musl
+        - env: TARGET=i686-unknown-linux-musl
+        # - env: TARGET=mips-unknown-linux-musl
+        # - env: TARGET=mipsel-unknown-linux-musl
+        - env: TARGET=x86_64-unknown-linux-musl
+
+        # uclibc
+        # - env: TARGET=mips-unknown-linux-uclibc
+        # - env: TARGET=mipsel-unknown-linux-uclibc
 
         # Android
-        - env: TARGET=aarch64-linux-android IGNORE_COMPILE_TEST=1
-        - env: TARGET=armv7-linux-androideabi IGNORE_COMPILE_TEST=1
-        - env: TARGET=i686-linux-android IGNORE_COMPILE_TEST=1
-        - env: TARGET=x86_64-linux-android IGNORE_COMPILE_TEST=1
+        - env: TARGET=aarch64-linux-android
+        - env: TARGET=arm-linux-androideabi
+        - env: TARGET=armv7-linux-androideabi
+        - env: TARGET=i686-linux-android
+        - env: TARGET=x86_64-linux-android
 
-        # TODO: add windows
+        # asmjs
+        - env: TARGET=asmjs-unknown-emscripten
+        - env: TARGET=wasm32-unknown-emscripten
+
+        # Windows
+        # - env: TARGET=i686-pc-windows-gnu
+        # - env: TARGET=x86_64-pc-windows-gnu
+
+        # BSD
+        # - env: TARGET=aarch64-unknown-freebsd
+        # - env: TARGET=i686-unknown-freebsd
+        # - env: TARGET=i686-unknown-netbsd
+        # - env: TARGET=i686-unknown-openbsd
+        # - env: TARGET=sparc64-unknown-netbsd
+        # - env: TARGET=x86_64-rumprun-netbsd
+        # - env: TARGET=x86_64-unknown-freebsd
+        # - env: TARGET=x86_64-unknown-netbsd
+        # - env: TARGET=x86_64-unknown-openbsd
 
 before_install:
     - set -e
