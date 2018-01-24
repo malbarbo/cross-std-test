@@ -6,10 +6,10 @@ toml=std/Cargo.toml
 mkdir -p std/
 
 crates=(
-#    alloc
-#    core
+    alloc
+    core
     std
-#    std_unicode
+    std_unicode
 )
 
 compile_lib() {
