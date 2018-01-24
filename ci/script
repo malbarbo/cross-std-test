@@ -18,7 +18,10 @@ main() {
     set -e
     dir="$(dirname $0)"
     cross="$dir/cross-test"
+
+    mkdir -p "$dir/../compile-test/tests/run-pass-failing"
     args="$($dir/args $TARGET)"
+
     set +e
 
     ret=0
