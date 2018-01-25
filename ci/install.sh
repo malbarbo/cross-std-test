@@ -1,6 +1,8 @@
 set -ex
 
 main() {
+    exec cargo install -f --git https://github.com/malbarbo/cross --branch simplify-target
+
     local target=
     if [ $TRAVIS_OS_NAME = linux ]; then
         target=x86_64-unknown-linux-musl
