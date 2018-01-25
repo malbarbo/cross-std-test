@@ -30,7 +30,7 @@ main() {
     ret=0
     crates="-p alloc -p core -p std -p std_unicode"
     if [ -z "$IGNORE" ]; then
-        if ! cross test --lib \
+        if [[ $TARGET != *x32* ]] && ! cross test --lib \
                    $crates \
                    --target $TARGET \
                    --no-fail-fast \
