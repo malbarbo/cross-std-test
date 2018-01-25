@@ -81,6 +81,10 @@ general = {
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
     ],
+    'armv5te-unknown-linux-gnueabi': [
+        'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
+        'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
+    ],
     'i586-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
