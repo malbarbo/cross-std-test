@@ -23,6 +23,9 @@ def main():
     if target in general_run_pass:
         run_pass_failing(general_run_pass[target])
 
+    if 'windows' in target:
+        skip(windows)
+
 
 qemu = [
     'net::tcp::tests::multiple_connect_interleaved_greedy_schedule',
@@ -76,6 +79,30 @@ android = [
     'process::tests::test_override_env',
 ]
 
+windows = [
+    'fs::tests::copy_file_preserves_streams',
+    'fs::tests::copy_file_returns_metadata_len',
+    'fs::tests::create_dir_all_with_junctions',
+    'fs::tests::fchmod_works',
+    'fs::tests::read_link',
+    'fs::tests::realpath_works',
+    'fs::tests::realpath_works_tricky',
+    'fs::tests::recursive_rmdir',
+    'fs::tests::recursive_rmdir_of_symlink',
+    'fs::tests::symlink_noexist',
+    'fs::tests::symlinks_work',
+    'fs::tests::truncate_works',
+    'fs::tests::unicode_path_exists',
+    'fs::tests::unicode_path_is_dir',
+    'net::tcp::tests::bind_error',
+    'net::tcp::tests::close_readwrite_smoke',
+    'net::tcp::tests::fast_rebind',
+    'net::tcp::tests::shutdown_smoke',
+    'net::udp::tests::bind_error',
+    'process::tests::test_creation_flags',
+    'sys::windows::os::tests::ntstatus_error',
+]
+
 general = {
     'arm-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
@@ -98,6 +125,10 @@ general = {
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
         'f64::tests::test_mul_add', # left: `NaN`, right: `inf`
+    ],
+    'i686-pc-windows-gnu': [
+        'f32::tests::test_float_bits_conv',
+        'f64::tests::test_float_bits_conv',
     ],
     'i686-unknown-linux-musl': [
         'f32::tests::test_float_bits_conv',
@@ -125,6 +156,9 @@ general = {
         'net::tcp::tests::timeouts', # left: `8`, right: `16`
         'net::udp::tests::timeouts', # left: `8`, right: `16`
         'sys::unix::ext::net::test::timeouts', # left: `8`, right: `16`
+    ],
+    'x86_64-pc-windows-gnu': [
+        'process::tests::test_process_output_error',
     ],
 }
 
