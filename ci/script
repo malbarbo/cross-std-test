@@ -27,8 +27,14 @@ main() {
 
     set +e
 
+    if [[ $TARGET != *emscripten* ]]; then
+        crates="-p alloc -p core -p std -p std_unicode"
+    else
+        # core and std fails to build
+        crates="-p alloc -p std_unicode"
+    fi
+
     ret=0
-    crates="-p alloc -p core -p std -p std_unicode"
     if [ -z "$IGNORE" ]; then
         if [[ $TARGET != *x32* ]] && ! cross test --lib \
                    $crates \
