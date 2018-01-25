@@ -17,11 +17,10 @@ main() {
     args="$($dir/args $TARGET)"
 
     if [ -f "$dir/../docker/$TARGET/Dockerfile" ]; then
-        tag=$(git ls-remote --tags --refs --exit-code https://github.com/japaric/cross \
-                | cut -d/ -f3 \
-                | grep -E '^v[0.1.0-9.]+$' \
-                | sort --version-sort \
-                | tail -n1)
+        tag="v$(cross -V | grep cross | cut -d' ' -f2)"
+        if echo $tag | grep dev; then
+            tag="latest"
+        fi
 
         docker build -t japaric/$TARGET:$tag -f "$dir/../docker/$TARGET/Dockerfile" "$dir/../docker"
     fi

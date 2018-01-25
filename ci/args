@@ -13,14 +13,15 @@ def main():
         skip(qemu)
         run_pass_failing(qemu_run_pass)
 
+    if 'android' in target:
+        skip(android)
+        run_pass_failing(android_run_pass)
+
     if target in general:
         skip(general[target])
 
     if target in general_run_pass:
         run_pass_failing(general_run_pass[target])
-
-    if 'android' in target:
-        run_pass_failing(android_run_pass)
 
 
 qemu = [
@@ -67,13 +68,15 @@ qemu_run_pass = [
     'try-wait.rs',
 ]
 
+# Exec format error
+android = [
+    'process::tests::test_add_to_env',
+    'process::tests::test_capture_env_at_spawn',
+    'process::tests::test_inherit_env',
+    'process::tests::test_override_env',
+]
+
 general = {
-    'aarch64-linux-android': [
-        'process::tests::test_add_to_env',
-        'process::tests::test_capture_env_at_spawn',
-        'process::tests::test_inherit_env',
-        'process::tests::test_override_env',
-    ],
     'arm-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
@@ -108,7 +111,17 @@ general = {
         'iter::test_lt', # assertion failed: a.iter().gt(b.iter()) == (a[0] > b[0])
         'option::test_ord', # assertion failed: !(nan > big)
         'tuple::test_tuple_cmp', # assertion failed: !((1.0f64, 2.0f64) > (nan, 3.0))
-    ]
+    ],
+    'x86_64-linux-android': [
+        'net::ip::tests::cmp', # assertion failed: v61 < v62
+        'net::ip::tests::ip_properties', # left: `true`, right: `false`
+        'net::ip::tests::ipv6_properties', # left: `true`, right: `false`
+    ],
+    'x86_64-unknown-linux-gnux32': [
+        'net::tcp::tests::timeouts', # left: `8`, right: `16`
+        'net::udp::tests::timeouts', # left: `8`, right: `16`
+        'sys::unix::ext::net::test::timeouts', # left: `8`, right: `16`
+    ],
 }
 
 android_run_pass = [
@@ -119,7 +132,7 @@ android_run_pass = [
     'issue-33770.rs',
     'panic-runtime/abort-link-to-unwinding-crates.rs',
     'panic-runtime/abort.rs',
-    'panic-runtime/lto-abort.rs'
+    'panic-runtime/lto-abort.rs',
     'process-envs.rs',
     'process-exit.rs',
     'process-remove-from-env.rs',
@@ -188,6 +201,16 @@ general_run_pass = {
     'powerpc64le-unknown-linux-gnu': [
         'saturating-float-casts.rs', # left: `255`, right: `0`
         'simd-intrinsic-generic-cast.rs', # f64 -> i32 (i32x4(-1234567, 12345678, -123456792, 1234567936) != i32x4(-1234567, 12345678, -123456789, 1234567890))
+    ],
+    'i686-linux-android': [
+        'intrinsic-alignment.rs', # main function not found
+        'rec-align-u64.rs', # Could not find `m` in `m`
+    ],
+    'x86_64-linux-android': [
+        'intrinsic-alignment.rs', # main function not found
+        'rec-align-u64.rs', # Could not find `m` in `m`
+        'signal-alternate-stack-cleanup.rs', # SA_SIGINFO | SA_ONSTACK, expected u32, found u64
+        'simd-intrinsic-generic-elements.rs', # i32x2(100, 0) != i32x2(100, 21)
     ],
 }
 
