@@ -8,7 +8,7 @@ matrix:
         # Linux
         - env: TARGET=aarch64-unknown-linux-gnu
         - env: TARGET=arm-unknown-linux-gnueabi
-        # - env: TARGET=arm-unknown-linux-gnueabihf
+        - env: TARGET=arm-unknown-linux-gnueabihf
         # - env: TARGET=armv4t-unknown-linux-gnueabi
         - env: TARGET=armv5te-unknown-linux-gnueabi
         - env: TARGET=armv7-unknown-linux-gnueabihf
