@@ -43,10 +43,10 @@ matrix:
 
         # Android
         - env: TARGET=aarch64-linux-android
-        - env: TARGET=arm-linux-androideabi
+        # - env: TARGET=arm-linux-androideabi segfaults on travis
         - env: TARGET=armv7-linux-androideabi
         - env: TARGET=i686-linux-android
-        - env: TARGET=x86_64-linux-android
+        # - env: TARGET=x86_64-linux-android segfaults on travis
 
         # Emscripten
         - env: TARGET=asmjs-unknown-emscripten IGNORE_COMPILE_TEST=1
