@@ -33,8 +33,8 @@ matrix:
         - env: TARGET=armv7-unknown-linux-musleabihf IGNORE_COMPILE_TEST=1
         # - env: TARGET=i586-unknown-linux-musl
         - env: TARGET=i686-unknown-linux-musl
-        # - env: TARGET=mips-unknown-linux-musl
-        # - env: TARGET=mipsel-unknown-linux-musl
+        - env: TARGET=mips-unknown-linux-musl
+        - env: TARGET=mipsel-unknown-linux-musl
         - env: TARGET=x86_64-unknown-linux-musl
 
         # uclibc

@@ -65,6 +65,7 @@ qemu_run_pass = [
     'segfault-no-out-of-stack.rs',
     'signal-exit-status.rs',
     'sigpipe-should-be-ignored.rs',
+    'simd-target-feature-mixup.rs', # target_feature does not work on qemu
     'stack-probes-lto.rs',
     'stack-probes.rs',
     'stdio-is-blocking.rs',
@@ -189,7 +190,17 @@ general_run_pass = {
         'next-power-of-two-overflow-ndebug.rs',
         'u128.rs',
     ],
+    'mips-unknown-linux-musl': [
+        'i128.rs',
+        'next-power-of-two-overflow-ndebug.rs',
+        'u128.rs',
+    ],
     'mipsel-unknown-linux-gnu': [
+        'i128.rs',
+        'next-power-of-two-overflow-ndebug.rs',
+        'u128.rs',
+    ],
+    'mipsel-unknown-linux-musl': [
         'i128.rs',
         'next-power-of-two-overflow-ndebug.rs',
         'u128.rs',
