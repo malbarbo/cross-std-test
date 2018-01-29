@@ -1,4 +1,4 @@
-// Copyright 2017 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2018 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,16 +8,17 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// #45662
+// #47096
 
-#![feature(repr_align)]
-#![feature(attr_literals)]
+#![feature(slice_patterns)]
 
-#[repr(align(16))]
-pub struct A(i64);
-
-pub extern "C" fn foo(x: A) {}
+fn foo(s: &[i32]) -> &[i32] {
+    let &[ref xs..] = s;
+    xs
+}
 
 fn main() {
-    foo(A(0));
+    let x = [1, 2, 3];
+    let y = foo(&x);
+    assert_eq!(x, y);
 }

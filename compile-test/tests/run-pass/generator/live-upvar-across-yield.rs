@@ -8,16 +8,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// #45662
+#![feature(generators, generator_trait)]
 
-#![feature(repr_align)]
-#![feature(attr_literals)]
-
-#[repr(align(16))]
-pub struct A(i64);
-
-pub extern "C" fn foo(x: A) {}
+use std::ops::Generator;
 
 fn main() {
-    foo(A(0));
+    let b = |_| 3;
+    let mut a = || {
+        b(yield);
+    };
+    a.resume();
 }

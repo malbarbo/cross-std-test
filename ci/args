@@ -178,9 +178,6 @@ android_run_pass = [
 ]
 
 general_run_pass = {
-    'aarch64-linux-android': [
-        'signal-alternate-stack-cleanup.rs', # fails to build SA_SIGINFO | SA_ONSTACK; expected u32, found u64
-    ],
     'arm-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 0 is not approximately equal to 2.718281828459045
     ],
@@ -224,7 +221,6 @@ general_run_pass = {
         'union/union-c-interop.rs', # left: `8589934595`, right: `274877906944`
     ],
     'powerpc-unknown-linux-gnu': [
-        'conditional-compile-arch.rs', # FIXME: fix upstream
         'extern-pass-empty.rs', # segfault
         'extern-pass-TwoU16s.rs', # segfault
         'extern-pass-TwoU32s.rs', # segfault
@@ -243,14 +239,7 @@ general_run_pass = {
         'saturating-float-casts.rs', # left: `255`, right: `0`
         'simd-intrinsic-generic-cast.rs', # f64 -> i32 (i32x4(-1234567, 12345678, -123456792, 1234567936) != i32x4(-1234567, 12345678, -123456789, 1234567890))
     ],
-    'i686-linux-android': [
-        'intrinsic-alignment.rs', # main function not found
-        'rec-align-u64.rs', # Could not find `m` in `m`
-    ],
     'x86_64-linux-android': [
-        'intrinsic-alignment.rs', # main function not found
-        'rec-align-u64.rs', # Could not find `m` in `m`
-        'signal-alternate-stack-cleanup.rs', # SA_SIGINFO | SA_ONSTACK, expected u32, found u64
         'simd-intrinsic-generic-elements.rs', # i32x2(100, 0) != i32x2(100, 21)
     ],
 }

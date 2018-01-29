@@ -1,4 +1,4 @@
-// Copyright 2017 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2018 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,16 +8,9 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// #45662
+#![feature(use_nested_groups)]
+#![allow(unused_import)]
 
-#![feature(repr_align)]
-#![feature(attr_literals)]
+use {{}, {}};
 
-#[repr(align(16))]
-pub struct A(i64);
-
-pub extern "C" fn foo(x: A) {}
-
-fn main() {
-    foo(A(0));
-}
+fn main() {}

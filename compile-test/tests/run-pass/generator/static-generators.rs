@@ -8,16 +8,19 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// #45662
+#![feature(generators, generator_trait)]
 
-#![feature(repr_align)]
-#![feature(attr_literals)]
-
-#[repr(align(16))]
-pub struct A(i64);
-
-pub extern "C" fn foo(x: A) {}
+use std::ops::{Generator, GeneratorState};
 
 fn main() {
-    foo(A(0));
+    let mut generator = unsafe {
+        static || {
+            let a = true;
+            let b = &a;
+            yield;
+            assert_eq!(b as *const _, &a as *const _);
+        }
+    };
+    assert_eq!(generator.resume(), GeneratorState::Yielded(()));
+    assert_eq!(generator.resume(), GeneratorState::Complete(()));
 }
