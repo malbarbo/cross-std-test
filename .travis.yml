@@ -28,10 +28,10 @@ matrix:
 
         # musl
         # - env: TARGET=aarch64-unknown-linux-musl
-        - env: TARGET=arm-unknown-linux-musleabi IGNORE_COMPILE_TEST=1
-        # - env: TARGET=arm-unknown-linux-musleabihf
-        - env: TARGET=armv7-unknown-linux-musleabihf IGNORE_COMPILE_TEST=1
-        # - env: TARGET=i586-unknown-linux-musl
+        - env: TARGET=arm-unknown-linux-musleabi
+        - env: TARGET=arm-unknown-linux-musleabihf
+        - env: TARGET=armv7-unknown-linux-musleabihf
+        - env: TARGET=i586-unknown-linux-musl
         - env: TARGET=i686-unknown-linux-musl
         - env: TARGET=mips-unknown-linux-musl
         - env: TARGET=mipsel-unknown-linux-musl
