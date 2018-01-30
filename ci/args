@@ -17,6 +17,9 @@ def main():
         skip(android)
         run_pass_failing(android_run_pass)
 
+    if 'musl' in target:
+        run_pass_failing(musl_run_pass)
+
     if target in general:
         skip(general[target])
 
@@ -25,6 +28,7 @@ def main():
 
     if 'windows' in target:
         skip(windows)
+        run_pass_failing(windows_run_pass)
 
 
 qemu = [
@@ -108,12 +112,10 @@ general = {
     'arm-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
-        'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
     ],
     'armv5te-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
-        'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
     ],
     'i586-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
@@ -181,12 +183,42 @@ android_run_pass = [
     'running-with-no-runtime.rs',
 ]
 
+# Exec format error
+musl_run_pass = [
+    'abort-on-c-abi.rs',
+    'atomic-print.rs',
+    'crt-static-off-works.rs',
+    'issue-10626.rs',
+    'issue-12133-3.rs',
+    'issue-33770.rs',
+    'panic-runtime/abort-link-to-unwinding-crates.rs',
+    'panic-runtime/abort.rs',
+    'panic-runtime/lto-abort.rs',
+    'process-exit.rs',
+    'running-with-no-runtime.rs',
+]
+
+windows_run_pass = [
+    'backtrace-debuginfo.rs',
+    'backtrace.rs',
+    'issue-13304.rs',
+    'issue-14456.rs', # hangs
+    'no-stdio.rs',
+    'out-of-stack.rs',
+    'process-spawn-with-unicode-params.rs',
+    'process-status-inherits-stdin.rs',
+    'stack-probes-lto.rs',
+    'stack-probes.rs',
+]
+
 general_run_pass = {
     'arm-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 0 is not approximately equal to 2.718281828459045
+        'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
     ],
     'armv5te-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 1.3591409142295225 is not approximately equal to 2.718281828459045
+        'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
     ],
     'mips-unknown-linux-gnu': [
         'i128.rs',
@@ -194,17 +226,8 @@ general_run_pass = {
         'u128.rs',
     ],
     'mips-unknown-linux-musl': [
-        'abort-on-c-abi.rs',
-        'atomic-print.rs',
         'i128.rs',
-        'issue-10626.rs',
-        'issue-33770.rs',
         'next-power-of-two-overflow-ndebug.rs',
-        'panic-runtime/abort-link-to-unwinding-crates.rs',
-        'panic-runtime/abort.rs',
-        'panic-runtime/lto-abort.rs',
-        'process-exit.rs',
-        'running-with-no-runtime.rs',
         'u128.rs',
     ],
     'mipsel-unknown-linux-gnu': [
@@ -213,17 +236,8 @@ general_run_pass = {
         'u128.rs',
     ],
     'mipsel-unknown-linux-musl': [
-        'abort-on-c-abi.rs',
-        'atomic-print.rs',
         'i128.rs',
-        'issue-10626.rs',
-        'issue-33770.rs',
         'next-power-of-two-overflow-ndebug.rs',
-        'panic-runtime/abort-link-to-unwinding-crates.rs',
-        'panic-runtime/abort.rs',
-        'panic-runtime/lto-abort.rs',
-        'process-exit.rs',
-        'running-with-no-runtime.rs',
         'u128.rs',
     ],
     'mips64-unknown-linux-gnuabi64': [
