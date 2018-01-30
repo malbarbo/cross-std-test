@@ -53,8 +53,8 @@ matrix:
         # - env: TARGET=wasm32-unknown-emscripten IGNORE_COMPILE_TEST=1
 
         # Windows
-        - env: TARGET=i686-pc-windows-gnu IGNORE_COMPILE_TEST=1
-        - env: TARGET=x86_64-pc-windows-gnu IGNORE_COMPILE_TEST=1
+        - env: TARGET=i686-pc-windows-gnu
+        - env: TARGET=x86_64-pc-windows-gnu
 
         # BSD
         # - env: TARGET=aarch64-unknown-freebsd

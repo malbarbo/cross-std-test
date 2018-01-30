@@ -23,7 +23,11 @@ main() {
         fi
 
         docker build -t japaric/$TARGET:$tag -f "$dir/../docker/$TARGET/Dockerfile" "$dir/../docker"
+    else
+        docker pull japaric/$TARGET
     fi
+
+    docker tag japaric/$TARGET compiletest
 
     set +e
 
@@ -54,9 +58,10 @@ main() {
     fi
 
     if [ -z "$IGNORE_COMPILE_TEST" ]; then
-        if ! cross test \
+        if ! COMPILE_TEST_TARGET="$TARGET" \
+             cross test \
+                   -vv \
                    --manifest-path compile-test/Cargo.toml \
-                   --target $TARGET \
                    --no-fail-fast; then
             ret=1
         fi
