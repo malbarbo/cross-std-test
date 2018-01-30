@@ -1,5 +1,0 @@
-[build.env]
-passthrough = [
-    "COMPILE_TEST_FILTER",
-    "RUST_BACKTRACE",
-]
