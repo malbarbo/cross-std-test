@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+import glob
+import os
 import sys
 
 def main():
@@ -116,6 +118,8 @@ general = {
     'armv5te-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
+        'atomic::int_nand', # left: `78`, right: `-4914`
+        'atomic::uint_nand', # left: `78`, right: `4294962382`
     ],
     'i586-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
@@ -125,6 +129,11 @@ general = {
     'i586-unknown-linux-musl': [
         'f32::tests::test_float_bits_conv', # left: `2144687445`,  right: `2140493141`
         'f64::tests::test_float_bits_conv', # left: `9221870836978985642`, right: `9219619037165300394`
+        'f32::tests::test_atanh',
+        'f32::tests::test_ln',
+        'f32::tests::test_log',
+        'f32::tests::test_log10',
+        'f32::tests::test_log2',
     ],
     'i686-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
@@ -211,7 +220,14 @@ windows_run_pass = [
     'stack-probes.rs',
 ]
 
+issues = glob.iglob(os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/issue*.rs')
+windows_run_pass.extend(map(os.path.basename, issues))
+print(windows_run_pass)
+
 general_run_pass = {
+    'aarch64-unknown-linux-gnu': [
+        'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
+    ],
     'arm-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 0 is not approximately equal to 2.718281828459045
         'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
@@ -219,6 +235,9 @@ general_run_pass = {
     'armv5te-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 1.3591409142295225 is not approximately equal to 2.718281828459045
         'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
+    ],
+    'arm-unknown-linux-musleabi': [
+        'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0) // simd-intrinsic-generic-comparison.rs:86:9
     ],
     'mips-unknown-linux-gnu': [
         'i128.rs',
@@ -288,6 +307,9 @@ general_run_pass = {
     'x86_64-linux-android': [
         'simd-intrinsic-generic-elements.rs', # i32x2(100, 0) != i32x2(100, 21)
     ],
+    'aarch64-linux-android': [
+        'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
+    ],
 }
 
 
@@ -304,7 +326,6 @@ def skip(cases):
 
 
 def run_pass_failing(cases):
-    import os
     dir = os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/'
     for case in cases:
         try:
