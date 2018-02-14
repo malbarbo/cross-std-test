@@ -28,6 +28,7 @@ mod tests {
             "CARGO_TARGET_{}_RUNNER",
             config.target.replace('-', "_").to_uppercase()
         )).ok();
+        config.target_rustcflags = Some("-C target-feature=+crt-static".to_string());
         config.link_deps();
         compiletest::run_tests(&config);
     }
