@@ -8,8 +8,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![allow(unused_import)]
 
-use {{}, {}};
+#![feature(nll)]
 
-fn main() {}
+static mut x: &'static u32 = &0;
+
+fn foo() {
+    unsafe { x = &1; }
+}
+
+fn main() { }

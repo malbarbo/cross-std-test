@@ -8,8 +8,21 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![allow(unused_import)]
+enum Foo {
+    A,
+    B,
+    C,
+    D,
+    E,
+}
+use Foo::*;
 
-use {{}, {}};
-
-fn main() {}
+fn main() {
+    for foo in &[A, B, C, D, E] {
+        match *foo {
+            | A => println!("A"),
+            | B | C if 1 < 2 => println!("BC!"),
+            | _ => {},
+        }
+    }
+}

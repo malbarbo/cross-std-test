@@ -8,8 +8,11 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![allow(unused_import)]
+fn id<'c, 'b>(f: &'c &'b Fn(&i32)) -> &'c &'b Fn(&'static i32) {
+    f
+}
 
-use {{}, {}};
-
-fn main() {}
+fn main() {
+    let f: &Fn(&i32) = &|x| {};
+    id(&f);
+}
