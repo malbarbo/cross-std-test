@@ -38,6 +38,7 @@ def run_pass_path():
 def run_pass_step():
     step = os.environ.get('COMPILE_TEST_STEP')
     files = os.listdir(run_pass_path())
+    files.sort()
     half = int(len(files) / 2)
     if step == '1':
         run_pass_failing(files[half:])
