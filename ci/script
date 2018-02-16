@@ -39,7 +39,7 @@ main() {
     fi
 
     ret=0
-    if [ -z "$IGNORE" ]; then
+    if [ -z "$TESTS_IGNORE" ]; then
         if [[ $TARGET != *x32* ]] && ! cross test --lib \
                    $crates \
                    --target $TARGET \
@@ -57,7 +57,7 @@ main() {
         fi
     fi
 
-    if [ -z "$IGNORE_COMPILE_TEST" ]; then
+    if [ -z "$COMPILE_TEST_IGNORE" ]; then
         if [[ $TARGET = *windows-gnu ]]; then
             if ! COMPILE_TEST_TARGET="$TARGET" \
                  cross test \
