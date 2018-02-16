@@ -11,6 +11,7 @@ matrix:
         - env: TARGET=sparc64-unknown-linux-gnu
         - env: TARGET=wasm32-unknown-emscripten IGNORE_COMPILE_TEST=1
         - env: TARGET=x86_64-linux-android
+
     include:
         # Linux
         - env: TARGET=aarch64-unknown-linux-gnu
@@ -28,12 +29,14 @@ matrix:
         - env: TARGET=powerpc64le-unknown-linux-gnu
         - env: TARGET=powerpc64-unknown-linux-gnu
         - env: TARGET=powerpc-unknown-linux-gnu
+        - env: TARGET=s390x-unknown-linux-gnu # allow failures
+        - env: TARGET=sparc64-unknown-linux-gnu # allow failures
         - env: TARGET=x86_64-unknown-linux-gnu
         - env: TARGET=x86_64-unknown-linux-gnux32 IGNORE_COMPILE_TEST=1
 
         # musl
         # - env: TARGET=aarch64-unknown-linux-musl
-        - env: TARGET=arm-unknown-linux-musleabi
+        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1
         - env: TARGET=arm-unknown-linux-musleabihf
         - env: TARGET=armv7-unknown-linux-musleabihf
         - env: TARGET=i586-unknown-linux-musl
@@ -48,15 +51,20 @@ matrix:
 
         # Android
         - env: TARGET=aarch64-linux-android
+        - env: TARGET=arm-linux-androideabi # allow failures
         - env: TARGET=armv7-linux-androideabi
         - env: TARGET=i686-linux-android
+        - env: TARGET=x86_64-linux-android # allow failures
 
         # Emscripten
         - env: TARGET=asmjs-unknown-emscripten IGNORE_COMPILE_TEST=1
+        - env: TARGET=wasm32-unknown-emscripten IGNORE_COMPILE_TEST=1 # allow failures
 
         # Windows
-        - env: TARGET=i686-pc-windows-gnu
-        - env: TARGET=x86_64-pc-windows-gnu
+        - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=1
+        - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=2 IGNORE=1
+        - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=1
+        - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=1 IGNORE=1
 
         # BSD
         # - env: TARGET=aarch64-unknown-freebsd

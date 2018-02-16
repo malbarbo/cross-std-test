@@ -7,10 +7,6 @@ import sys
 def main():
     target = sys.argv[1]
 
-    # the test needs to be fixed to be run with cross
-    # FIXME: fix upstream
-    run_pass_failing(['env-home-dir.rs'])
-
     if not is_native(target):
         skip(qemu)
         run_pass_failing(qemu_run_pass)
@@ -31,6 +27,22 @@ def main():
     if 'windows' in target:
         skip(windows)
         run_pass_failing(windows_run_pass)
+
+    run_pass_step()
+
+
+def run_pass_path():
+    return os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/'
+
+
+def run_pass_step():
+    step = os.environ.get('COMPILE_TEST_STEP')
+    files = os.listdir(run_pass_path())
+    half = int(len(files) / 2)
+    if step == '1':
+        run_pass_failing(files[half:])
+    elif step == '2':
+        run_pass_failing(files[:half])
 
 
 qemu = [
@@ -219,10 +231,6 @@ windows_run_pass = [
     'stack-probes-lto.rs',
     'stack-probes.rs',
 ]
-
-issues = glob.iglob(os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/issue*.rs')
-windows_run_pass.extend(map(os.path.basename, issues))
-print(windows_run_pass)
 
 general_run_pass = {
     'aarch64-unknown-linux-gnu': [
