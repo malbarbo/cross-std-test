@@ -37,6 +37,7 @@ matrix:
         # musl
         # - env: TARGET=aarch64-unknown-linux-musl
         - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1
+        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=2
         - env: TARGET=arm-unknown-linux-musleabihf
         - env: TARGET=armv7-unknown-linux-musleabihf
         - env: TARGET=i586-unknown-linux-musl
@@ -62,9 +63,9 @@ matrix:
 
         # Windows
         - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=1
-        - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=2 TESTS_IGNORE=1
+        - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=2
         - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=1
-        - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=2 TESTS_IGNORE=1
+        - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=2
 
         # BSD
         # - env: TARGET=aarch64-unknown-freebsd
