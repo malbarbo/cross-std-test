@@ -38,7 +38,7 @@ def run_pass_path():
 def run_pass_step():
     step = os.environ.get('COMPILE_TEST_STEP')
     files = os.listdir(run_pass_path())
-    files.sort()
+    files.sort(key=lambda x: x.replace('_', '-'))
     half = int(len(files) / 2)
     if step == '1':
         run_pass_failing(files[half:])
@@ -121,6 +121,7 @@ windows = [
     'net::udp::tests::bind_error',
     'process::tests::test_creation_flags',
     'sys::windows::os::tests::ntstatus_error',
+    'process::tests::test_override_env', # hangs
 ]
 
 general = {
@@ -223,6 +224,7 @@ musl_run_pass = [
 windows_run_pass = [
     'backtrace-debuginfo.rs',
     'backtrace.rs',
+    'env-home-dir.rs',
     'issue-13304.rs',
     'issue-14456.rs', # hangs
     'no-stdio.rs',
@@ -302,7 +304,9 @@ general_run_pass = {
         'extern-pass-TwoU8s.rs', # segfault
         'foreign-fn-with-byval.rs', # segfault
         'issue-28676.rs', # segfault
+        'panic-handler-flail-wildly.rs', # sometimes it segfaults
         'struct-return.rs', # segfault
+        'task-comm-3.rs', # sometimes segfaults
         'union/union-c-interop.rs', # segfault
     ],
     'powerpc64-unknown-linux-gnu': [
