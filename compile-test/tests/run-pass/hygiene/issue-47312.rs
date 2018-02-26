@@ -8,10 +8,23 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+// ignore-pretty pretty-printing is unhygienic
 
-#[derive(Debug)]
-pub struct Z;
+#![feature(decl_macro)]
+#![allow(unused)]
 
-pub trait Tr<'a> {}
+mod foo {
+    pub macro m($s:tt, $i:tt) {
+        $s.$i
+    }
+}
+
+mod bar {
+    struct S(i32);
+    fn f() {
+        let s = S(0);
+        ::foo::m!(s, 0);
+    }
+}
+
+fn main() {}

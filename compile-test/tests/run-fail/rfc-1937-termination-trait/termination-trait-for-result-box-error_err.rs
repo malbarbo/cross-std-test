@@ -1,4 +1,4 @@
-// Copyright 2017 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2018 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,10 +8,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+// must-compile-successfully
+// failure-status: 1
 
-#[derive(Debug)]
-pub struct Z;
+#![feature(termination_trait)]
 
-pub trait Tr<'a> {}
+use std::io::{Error, ErrorKind};
+
+fn main() -> Result<(), Box<Error>> {
+    Err(Box::new(Error::new(ErrorKind::Other, "returned Box<Error> from main()")))
+}

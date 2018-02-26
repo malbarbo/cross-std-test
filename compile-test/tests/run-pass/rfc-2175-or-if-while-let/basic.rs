@@ -8,10 +8,23 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+#![feature(if_while_or_patterns)]
 
-#[derive(Debug)]
-pub struct Z;
+enum E {
+    V(u8),
+    U(u8),
+    W,
+}
+use E::*;
 
-pub trait Tr<'a> {}
+fn main() {
+    let mut e = V(10);
+
+    if let V(x) | U(x) = e {
+        assert_eq!(x, 10);
+    }
+    while let V(x) | U(x) = e {
+        assert_eq!(x, 10);
+        e = W;
+    }
+}

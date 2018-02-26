@@ -8,10 +8,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+pub fn main() {
+    // Test that these type check correctly.
+    (&42u8 >> 4) as usize;
+    (&42u8 << 4) as usize;
 
-#[derive(Debug)]
-pub struct Z;
-
-pub trait Tr<'a> {}
+    let cap = 512 * 512;
+    cap as u8;
+    // Assert `cap` did not get inferred to `u8` and overflowed.
+    assert_ne!(cap, 0);
+}

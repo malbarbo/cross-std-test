@@ -8,10 +8,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+#![feature(termination_trait)]
 
-#[derive(Debug)]
-pub struct Z;
+// error-pattern:oh, dear
 
-pub trait Tr<'a> {}
+fn main() -> ! {
+    panic!("oh, dear");
+}

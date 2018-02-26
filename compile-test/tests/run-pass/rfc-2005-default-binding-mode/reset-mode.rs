@@ -8,10 +8,18 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+#![feature(match_default_bindings)]
 
-#[derive(Debug)]
-pub struct Z;
+// Test that we "reset" the mode as we pass through a `&` pattern.
+//
+// cc #46688
 
-pub trait Tr<'a> {}
+fn surprise(x: i32) {
+    assert_eq!(x, 2);
+}
+
+fn main() {
+    let x = &(1, &2);
+    let (_, &b) = x;
+    surprise(b);
+}

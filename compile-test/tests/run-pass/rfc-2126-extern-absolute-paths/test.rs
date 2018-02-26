@@ -8,10 +8,14 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#[derive(Debug, PartialEq)]
-pub struct S;
+// Check that `#[test]` works with extern-absolute-paths enabled.
+//
+// Regression test for #47075.
 
-#[derive(Debug)]
-pub struct Z;
+// compile-flags: --test
 
-pub trait Tr<'a> {}
+#![feature(extern_absolute_paths)]
+
+#[test]
+fn test() {
+}
