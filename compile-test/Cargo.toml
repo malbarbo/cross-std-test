@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["malbarbo"]
 
 [dependencies]
-compiletest_rs = { git = "https://github.com/malbarbo/compiletest-rs", branch = "cross-std-test" }
+compiletest_rs = { git = "https://github.com/malbarbo/compiletest-rs", branch = "cross-std-test", features = ["norustc"] }
 
 [build-dependencies]
 cc = "1.0"
