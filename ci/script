@@ -10,10 +10,8 @@ main() {
     TARGET="$1"
 
     set -e
-    dir="$(dirname $0)"
 
-    mkdir -p "$dir/../compile-test/tests/run-pass-failing/panic-runtime"
-    mkdir -p "$dir/../compile-test/tests/run-pass-failing/union"
+    dir="$(dirname $0)"
     args="$($dir/args $TARGET)"
 
     if [ -f "$dir/../docker/$TARGET/Dockerfile" ]; then

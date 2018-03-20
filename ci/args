@@ -9,24 +9,24 @@ def main():
 
     if not is_native(target):
         skip(qemu)
-        run_pass_failing(qemu_run_pass)
+        skip_compile_test(qemu_run_pass, qemu_run_fail)
 
     if 'android' in target:
         skip(android)
-        run_pass_failing(android_run_pass)
+        skip_compile_test(android_run_pass)
 
     if 'musl' in target:
-        run_pass_failing(musl_run_pass)
+        skip_compile_test(musl_run_pass)
+
+    if 'windows' in target:
+        skip(windows)
+        skip_compile_test(windows_run_pass, windows_run_fail)
 
     if target in general:
         skip(general[target])
 
     if target in general_run_pass:
-        run_pass_failing(general_run_pass[target])
-
-    if 'windows' in target:
-        skip(windows)
-        run_pass_failing(windows_run_pass)
+        skip_compile_test(general_run_pass[target])
 
     run_pass_step()
 
@@ -37,13 +37,13 @@ def run_pass_path():
 
 def run_pass_step():
     step = os.environ.get('COMPILE_TEST_STEP')
-    files = os.listdir(run_pass_path())
+    files = [f for f in os.listdir(run_pass_path()) if 'auxiliary' not in f]
     files.sort(key=lambda x: x.replace('_', '-'))
     half = int(len(files) / 2)
     if step == '1':
-        run_pass_failing(files[half:])
+        skip_compile_test(files[half:])
     elif step == '2':
-        run_pass_failing(files[:half])
+        skip_compile_test(files[:half])
 
 
 qemu = [
@@ -89,6 +89,10 @@ qemu_run_pass = [
     'stack-probes.rs',
     'stdio-is-blocking.rs',
     'try-wait.rs',
+]
+
+qemu_run_fail = [
+    'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
 ]
 
 # Exec format error
@@ -162,14 +166,6 @@ general = {
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
     ],
-    'mips64-unknown-linux-gnuabi64': [
-        'f32::tests::test_powi', # 34.81 is not approximately equal to 0.028727
-        'f64::tests::test_powi', # 34.81 is not approximately equal to 0.028727
-    ],
-    'mips64el-unknown-linux-gnuabi64': [
-        'f32::tests::test_powi', # 34.81 is not approximately equal to 0.028727
-        'f64::tests::test_powi', # 34.81 is not approximately equal to 0.028727
-    ],
     'powerpc64le-unknown-linux-gnu': [
         'iter::test_lt', # assertion failed: a.iter().gt(b.iter()) == (a[0] > b[0])
         'option::test_ord', # assertion failed: !(nan > big)
@@ -231,8 +227,16 @@ windows_run_pass = [
     'out-of-stack.rs',
     'process-spawn-with-unicode-params.rs',
     'process-status-inherits-stdin.rs',
+    'segfault-no-out-of-stack.rs',
     'stack-probes-lto.rs',
     'stack-probes.rs',
+]
+
+windows_run_fail = [
+    'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
+    'test-panic.rs',
+    'test-should-fail-bad-message.rs',
+    'test-should-panic-no-message.rs',
 ]
 
 general_run_pass = {
@@ -269,32 +273,6 @@ general_run_pass = {
         'i128.rs',
         'next-power-of-two-overflow-ndebug.rs',
         'u128.rs',
-    ],
-    'mips64-unknown-linux-gnuabi64': [
-        'extern-pass-TwoU16s.rs',
-        'extern-pass-TwoU32s.rs',
-        'extern-pass-TwoU64s.rs',
-        'extern-pass-TwoU8s.rs',
-        'extern-return-TwoU16s.rs',
-        'extern-return-TwoU32s.rs',
-        'extern-return-TwoU64s.rs',
-        'extern-return-TwoU8s.rs',
-        'intrinsics-math.rs', # 625 is not approximately equal to 0.0016
-        'struct-return.rs',
-        'union/union-c-interop.rs', # left: `8589934595`, right: `8471728`
-    ],
-    'mips64el-unknown-linux-gnuabi64': [
-        'extern-pass-TwoU16s.rs',
-        'extern-pass-TwoU32s.rs',
-        'extern-pass-TwoU64s.rs',
-        'extern-pass-TwoU8s.rs',
-        'extern-return-TwoU16s.rs',
-        'extern-return-TwoU32s.rs',
-        'extern-return-TwoU64s.rs',
-        'extern-return-TwoU8s.rs',
-        'intrinsics-math.rs', # 625 is not approximately equal to 0.0016
-        'struct-return.rs',
-        'union/union-c-interop.rs', # left: `8589934595`, right: `274877906944`
     ],
     'powerpc-unknown-linux-gnu': [
         'extern-pass-empty.rs', # segfault
@@ -334,18 +312,25 @@ def is_native(target):
 
 
 def skip(cases):
-    print(" --skip ", end="")
-    print(" --skip ".join(cases), end="")
+    if cases:
+        print(" --skip ", end="")
+        print(" --skip ".join(cases), end="")
 
+def skip_compile_test(pass_, fail = []):
+    skip_(pass_, 'pass')
+    skip_(fail, 'fail')
 
-def run_pass_failing(cases):
-    dir = os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/'
+def skip_(cases, kind):
+    dir = os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-{}/'.format(kind)
     for case in cases:
+        to = dir + '../run-{}-failing/'.format(kind) + case
+        to_dir = os.path.dirname(to)
+        if not os.path.exists(to_dir):
+            os.makedirs(to_dir)
         try:
-            os.rename(dir + case, dir + '../run-pass-failing/' + case)
+            os.rename(dir + case, to)
         except:
             pass
-
 
 if __name__ == "__main__":
     main()
