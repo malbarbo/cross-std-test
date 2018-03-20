@@ -1,4 +1,4 @@
-// Copyright 2017 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2018 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,18 +8,24 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// This issue tracks a regression (a new warning) without
-// feature(never_type). When we make that the default, please
-// remove this test.
+// https://github.com/rust-lang/rust/issues/46114
 
-enum Foo { }
+#![feature(const_fn)]
 
-fn make_foo() -> Option<Foo> { None }
+#[derive(Eq, PartialEq)]
+struct A { value: u32 }
 
-#[deny(warnings)]
+const fn new(value: u32) -> A {
+    A { value }
+}
+
+const A_1: A = new(1);
+const A_2: A = new(2);
+
 fn main() {
-    match make_foo() {
-        None => {},
-        Some(_) => {}
-    }
+    let a_str = match new(42) {
+        A_1 => "A 1",
+        A_2 => "A 2",
+        _ => "Unknown A",
+    };
 }
