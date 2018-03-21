@@ -7,6 +7,12 @@ import sys
 def main():
     target = sys.argv[1]
 
+    # skip in all targets
+    skip_compile_test(
+        [],
+        ['rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',]
+    )
+
     if not is_native(target):
         skip(qemu)
         skip_compile_test(qemu_run_pass, qemu_run_fail)
@@ -91,9 +97,7 @@ qemu_run_pass = [
     'try-wait.rs',
 ]
 
-qemu_run_fail = [
-    'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
-]
+qemu_run_fail = []
 
 # Exec format error
 android = [
@@ -123,9 +127,10 @@ windows = [
     'net::tcp::tests::fast_rebind',
     'net::tcp::tests::shutdown_smoke',
     'net::udp::tests::bind_error',
+    'process::tests::test_add_to_env', # hangs
     'process::tests::test_creation_flags',
-    'sys::windows::os::tests::ntstatus_error',
     'process::tests::test_override_env', # hangs
+    'sys::windows::os::tests::ntstatus_error',
 ]
 
 general = {
@@ -218,8 +223,10 @@ musl_run_pass = [
 ]
 
 windows_run_pass = [
+    'abort-on-c-abi.rs',
     'backtrace-debuginfo.rs',
     'backtrace.rs',
+    'cci_capture_clause.rs',
     'env-home-dir.rs',
     'issue-13304.rs',
     'issue-14456.rs', # hangs
@@ -233,7 +240,7 @@ windows_run_pass = [
 ]
 
 windows_run_fail = [
-    'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
+    'args-panic.rs',
     'test-panic.rs',
     'test-should-fail-bad-message.rs',
     'test-should-panic-no-message.rs',
@@ -242,6 +249,7 @@ windows_run_fail = [
 general_run_pass = {
     'aarch64-unknown-linux-gnu': [
         'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
+        'simd-intrinsic-generic-reduction.rs', #LLVM ERROR: Cannot select: 0x7f7fec029c30: i32 = vecreduce_mul 0x7f7fec029c98
     ],
     'arm-unknown-linux-gnueabi': [
         'intrinsics-math.rs', # 0 is not approximately equal to 2.718281828459045
@@ -300,6 +308,7 @@ general_run_pass = {
     ],
     'aarch64-linux-android': [
         'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
+        'simd-intrinsic-generic-reduction.rs', #LLVM ERROR: Cannot select: 0x7f7fec029c30: i32 = vecreduce_mul 0x7f7fec029c98
     ],
 }
 
