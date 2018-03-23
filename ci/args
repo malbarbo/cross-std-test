@@ -134,6 +134,9 @@ windows = [
 ]
 
 general = {
+    'arm-linux-androideabi': [
+        'sync::mutex::tests::test_mutex_unsized', # SIGSEGV
+    ],
     'arm-unknown-linux-gnueabi': [
         'f32::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
         'f64::tests::test_mul_add', # 38.4 is not approximately equal to 1.2
@@ -150,13 +153,18 @@ general = {
         'f64::tests::test_mul_add',
     ],
     'i586-unknown-linux-musl': [
-        'f32::tests::test_float_bits_conv', # left: `2144687445`,  right: `2140493141`
-        'f64::tests::test_float_bits_conv', # left: `9221870836978985642`, right: `9219619037165300394`
         'f32::tests::test_atanh',
+        'f32::tests::test_float_bits_conv', # left: `2144687445`,  right: `2140493141`
         'f32::tests::test_ln',
         'f32::tests::test_log',
         'f32::tests::test_log10',
         'f32::tests::test_log2',
+        'f64::tests::test_atanh', # left: `0.0`, right: `-inf`
+        'f64::tests::test_float_bits_conv', # left: `9221870836978985642`, right: `9219619037165300394`
+        'f64::tests::test_ln', # neg_inf.ln().is_nan()
+        'f64::tests::test_log', # 1.0f64.log(-13.9).is_nan()
+        'f64::tests::test_log10', # neg_inf.log10().is_nan()
+        'f64::tests::test_log2', # neg_inf.log2().is_nan()
     ],
     'i686-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
@@ -171,15 +179,24 @@ general = {
         'f32::tests::test_float_bits_conv',
         'f64::tests::test_float_bits_conv',
     ],
+    'powerpc-unknown-linux-gnu': [
+        'num::u16::tests::test_reverse_bits', # illegal instruction
+    ],
     'powerpc64le-unknown-linux-gnu': [
         'iter::test_lt', # assertion failed: a.iter().gt(b.iter()) == (a[0] > b[0])
         'option::test_ord', # assertion failed: !(nan > big)
         'tuple::test_tuple_cmp', # assertion failed: !((1.0f64, 2.0f64) > (nan, 3.0))
     ],
     'x86_64-linux-android': [
+        'env::tests::join_paths_unix1', # hangs
+        'fs::tests::open_flavors', # thread '<unnamed>' panicked at '`Invalid argument (os error 22)` did not contain `Invalid argument`
+        'iter::test_min_by_key', # SIGILL
         'net::ip::tests::cmp', # assertion failed: v61 < v62
         'net::ip::tests::ip_properties', # left: `true`, right: `false`
         'net::ip::tests::ipv6_properties', # left: `true`, right: `false`
+        'num::i16::tests::test_count_ones', # SIGILL
+        'test process::tests::test_inherit_env', # thread '<unnamed>' panicked at 'output doesn't contain `XARGO_HOME=/xargo`
+        'vec_deque::tests::test_shrink_to_fit', # SIGILL
     ],
     'x86_64-unknown-linux-gnux32': [
         'net::tcp::tests::timeouts', # left: `8`, right: `16`
