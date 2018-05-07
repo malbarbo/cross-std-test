@@ -195,7 +195,7 @@ general = {
         'net::ip::tests::ip_properties', # left: `true`, right: `false`
         'net::ip::tests::ipv6_properties', # left: `true`, right: `false`
         'num::i16::tests::test_count_ones', # SIGILL
-        'test process::tests::test_inherit_env', # thread '<unnamed>' panicked at 'output doesn't contain `XARGO_HOME=/xargo`
+        'process::tests::test_inherit_env', # thread '<unnamed>' panicked at 'output doesn't contain `XARGO_HOME=/xargo`
         'vec_deque::tests::test_shrink_to_fit', # SIGILL
     ],
     'x86_64-unknown-linux-gnux32': [
