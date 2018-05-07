@@ -23,6 +23,7 @@ main() {
         docker build -t japaric/$TARGET:$tag -f "$dir/../docker/$TARGET/Dockerfile" "$dir/../docker"
     else
         docker pull japaric/$TARGET
+        true
     fi
 
     docker tag japaric/$TARGET compiletest
@@ -30,10 +31,10 @@ main() {
     set +e
 
     if [[ $TARGET != *emscripten* ]]; then
-        crates="-p alloc -p core -p std -p std_unicode"
+        crates="-p alloc -p core -p std"
     else
         # core and std fails to build
-        crates="-p alloc -p std_unicode"
+        crates="-p alloc"
     fi
 
     ret=0

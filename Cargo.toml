@@ -4,5 +4,4 @@ members = [
     "alloc",
     "core",
     "std",
-    "std_unicode",
 ]
