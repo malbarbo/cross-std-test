@@ -8,6 +8,7 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#![feature(never_type)]
 
 use std::mem::size_of;
 
@@ -42,6 +43,37 @@ enum ReorderedEnum {
     B(u8, u16, u8),
 }
 
+enum EnumEmpty {}
+
+enum EnumSingle1 {
+    A,
+}
+
+enum EnumSingle2 {
+    A = 42 as isize,
+}
+
+enum EnumSingle3 {
+    A,
+    B(!),
+}
+
+#[repr(u8)]
+enum EnumSingle4 {
+    A,
+}
+
+#[repr(u8)]
+enum EnumSingle5 {
+    A = 42 as u8,
+}
+
+enum NicheFilledEnumWithInhabitedVariant {
+    A(&'static ()),
+    B(&'static (), !),
+    C,
+}
+
 pub fn main() {
     assert_eq!(size_of::<u8>(), 1 as usize);
     assert_eq!(size_of::<u32>(), 4 as usize);
@@ -67,4 +99,13 @@ pub fn main() {
     assert_eq!(size_of::<e3>(), 4 as usize);
     assert_eq!(size_of::<ReorderedStruct>(), 4);
     assert_eq!(size_of::<ReorderedEnum>(), 6);
+
+    assert_eq!(size_of::<EnumEmpty>(), 0);
+    assert_eq!(size_of::<EnumSingle1>(), 0);
+    assert_eq!(size_of::<EnumSingle2>(), 0);
+    assert_eq!(size_of::<EnumSingle3>(), 0);
+    assert_eq!(size_of::<EnumSingle4>(), 1);
+    assert_eq!(size_of::<EnumSingle5>(), 1);
+
+    assert_eq!(size_of::<NicheFilledEnumWithInhabitedVariant>(), size_of::<&'static ()>());
 }

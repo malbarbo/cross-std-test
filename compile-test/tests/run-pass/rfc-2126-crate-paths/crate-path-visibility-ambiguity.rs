@@ -1,4 +1,4 @@
-// Copyright 2015 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2017 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,20 +8,16 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// pretty-expanded FIXME #23616
+#![feature(crate_in_paths)]
+#![feature(crate_visibility_modifier)]
 
-#![feature(box_syntax)]
-
-fn main() {
-    let x: Box<_> = box 1;
-
-    let v = (1, 2);
-
-    match v {
-        (2, 1) if take(x) => (),
-        (1, 2) if take(x) => (),
-        _ => (),
-    }
+mod m {
+    pub struct Z;
+    pub struct S1(crate (::m::Z)); // OK
+    pub struct S2(::crate ::m::Z); // OK
+    pub struct S3(crate ::m::Z); // OK
 }
 
-fn take<T>(_: T) -> bool { false }
+fn main() {
+    crate struct S; // OK (item in statement position)
+}
