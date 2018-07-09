@@ -9,8 +9,19 @@ def main():
 
     # skip in all targets
     skip_compile_test(
-        [],
-        ['rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',]
+        [
+            'async-await.rs',
+            'compiletest-skip-codegen.rs',
+            'issue-44056.rs',
+            'rfc-2126-extern-absolute-paths/basic.rs',
+            'simd-intrinsic-float-minmax.rs',
+            'using-target-feature-unstable.rs',
+        ],
+        [
+            'rfc-1937-termination-trait/termination-trait-for-box-dyn-error.rs',
+            'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
+            'rfc-1937-termination-trait/termination-trait-for-str.rs',
+        ]
     )
 
     if not is_native(target):
@@ -258,6 +269,7 @@ windows_run_pass = [
 
 windows_run_fail = [
     'args-panic.rs',
+    'run-unexported-tests.rs',
     'test-panic.rs',
     'test-should-fail-bad-message.rs',
     'test-should-panic-no-message.rs',
@@ -277,7 +289,47 @@ general_run_pass = {
         'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0)
     ],
     'arm-unknown-linux-musleabi': [
+        # most are illegal instruction
+        'debuginfo-lto.rs',
+        'fat-lto.rs',
+        'issue-29488.rs', # cannot access a TLS value during or after it is destroyed: AccessError
+        'lto-many-codegen-units.rs',
+        'lto-still-runs-thread-dtors.rs',
+        'sepcomp-lib-lto.rs',
         'simd-intrinsic-generic-comparison.rs', # assertion failed: (e.0 != 0) == lhs.0.le(&rhs.0) // simd-intrinsic-generic-comparison.rs:86:9
+        'thinlto/all-crates.rs',
+        'thinlto/thin-lto-inlines2.rs',
+        'thread-local-extern-static.rs',
+        'tls-dtors-are-run-in-a-static-binary.rs', # cannot access a TLS value during or after it is destroyed: AccessError
+        'tls-init-on-init.rs',
+        'tls-try-with.rs', # `try_with` failed: AccessError
+    ],
+    'arm-unknown-linux-musleabihf': [
+        # most are illegal instruction
+        'debuginfo-lto.rs',
+        'fat-lto.rs',
+        'issue-29488.rs', # cannot access a TLS value during or after it is destroyed: AccessError
+        'lto-many-codegen-units.rs',
+        'lto-still-runs-thread-dtors.rs',
+        'sepcomp-lib-lto.rs',
+        'thinlto/all-crates.rs',
+        'thinlto/thin-lto-inlines2.rs',
+        'thread-local-extern-static.rs',
+        'tls-dtors-are-run-in-a-static-binary.rs', # cannot access a TLS value during or after it is destroyed: AccessError
+        'tls-init-on-init.rs',
+        'tls-try-with.rs', # `try_with` failed: AccessError
+    ],
+    'armv7-unknown-linux-musleabihf': [
+        # most are illegal instruction
+        'lto-many-codegen-units.rs',
+        'lto-still-runs-thread-dtors.rs',
+        'sepcomp-lib-lto.rs',
+        'thinlto/all-crates.rs',
+        'thinlto/thin-lto-inlines2.rs',
+        'thread-local-extern-static.rs',
+        'tls-dtors-are-run-in-a-static-binary.rs', # cannot access a TLS value during or after it is destroyed: AccessError
+        'tls-init-on-init.rs',
+        'tls-try-with.rs', # `try_with` failed: AccessError
     ],
     'mips-unknown-linux-gnu': [
         'i128.rs',
@@ -285,21 +337,32 @@ general_run_pass = {
         'u128.rs',
     ],
     'mips-unknown-linux-musl': [
+        'const-endianess.rs', # left: `-84084359563257053391479216764159524864, right: `-82755131567472137518575409703879180289`
         'i128.rs',
+        'issue-36856.rs', # https://github.com/rust-lang/rust/issues/51413
         'next-power-of-two-overflow-ndebug.rs',
+        'simd-intrinsic-generic-gather.rs', # left: `[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`, right: `[42.0, 1.0, 43.0, 3.0, 4.0, 5.0, 45.0, 7.0]`
         'u128.rs',
     ],
     'mipsel-unknown-linux-gnu': [
         'i128.rs',
+        'issue-36856.rs', # https://github.com/rust-lang/rust/issues/51413
         'next-power-of-two-overflow-ndebug.rs',
+        'simd-intrinsic-generic-gather.rs', # left: `[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`, right: `[42.0, 1.0, 43.0, 3.0, 4.0, 5.0, 45.0, 7.0]`
         'u128.rs',
     ],
     'mipsel-unknown-linux-musl': [
         'i128.rs',
+        'issue-36856.rs', # https://github.com/rust-lang/rust/issues/51413
         'next-power-of-two-overflow-ndebug.rs',
+        'simd-intrinsic-generic-gather.rs', # left: `[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]`, right: `[42.0, 1.0, 43.0, 3.0, 4.0, 5.0, 45.0, 7.0]`
         'u128.rs',
     ],
+    'mips64-unknown-linux-gnuabi64': [
+        'const-endianess.rs', # left: `-84084359563257053391479216764159524864, right: `-82755131567472137518575409703879180289`
+    ],
     'powerpc-unknown-linux-gnu': [
+        'const-endianess.rs', # left: `-84084359563257053391479216764159524864`, right: `-82755131567472137518575409703879180289`
         'extern-pass-empty.rs', # segfault
         'extern-pass-TwoU16s.rs', # segfault
         'extern-pass-TwoU32s.rs', # segfault
@@ -315,8 +378,10 @@ general_run_pass = {
     'powerpc64-unknown-linux-gnu': [
         'stack-probes-lto.rs',
         'stack-probes.rs',
+        'const-endianess.rs', # left: `-84084359563257053391479216764159524864`, right: `-82755131567472137518575409703879180289`
     ],
     'powerpc64le-unknown-linux-gnu': [
+        'issue-50811.rs',
         'saturating-float-casts.rs', # left: `255`, right: `0`
         'simd-intrinsic-generic-cast.rs', # f64 -> i32 (i32x4(-1234567, 12345678, -123456792, 1234567936) != i32x4(-1234567, 12345678, -123456789, 1234567890))
     ],
