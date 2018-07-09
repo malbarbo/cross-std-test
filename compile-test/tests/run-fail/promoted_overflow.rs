@@ -1,4 +1,4 @@
-// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2018 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,14 +8,11 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// A simple spike test for MIR version of trans.
+#![allow(const_err)]
 
-fn sum(x: i32, y: i32) -> i32 {
-    x + y
-}
+// error-pattern: overflow
+// compile-flags: -C overflow-checks=yes
 
 fn main() {
-    let x = sum(22, 44);
-    assert_eq!(x, 66);
-    println!("sum()={:?}", x);
+    let x: &'static u32 = &(0u32 - 1);
 }
