@@ -57,22 +57,12 @@ main() {
     fi
 
     if [ -z "$COMPILE_TEST_IGNORE" ]; then
-        if [[ $TARGET = *windows-gnu ]]; then
-            if ! COMPILE_TEST_TARGET="$TARGET" \
-                 cross test \
-                       -vv \
-                       --manifest-path compile-test/Cargo.toml \
-                       --no-fail-fast; then
-                ret=1
-            fi
-        else
-            if ! cross test \
-                       -vv \
-                       --target $TARGET \
-                       --manifest-path compile-test/Cargo.toml \
-                       --no-fail-fast; then
-                ret=1
-            fi
+        if ! COMPILE_TEST_TARGET="$TARGET" \
+             cross test \
+                   -vv \
+                   --manifest-path compile-test/Cargo.toml \
+                   --no-fail-fast; then
+            ret=1
         fi
     fi
 

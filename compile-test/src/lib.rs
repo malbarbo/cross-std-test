@@ -16,6 +16,7 @@ mod tests {
     }
 
     fn run(mode: &'static str, path: &'static str) {
+        ::std::env::remove_var("RUST_TEST_THREADS");
         let mut config = compiletest::Config::default();
         config.mode = mode.parse().expect("Invalid mode");
         config.src_base = ["tests", path].iter().collect();
