@@ -10,7 +10,7 @@ RUN apt-get update && \
         make
 
 COPY qemu.sh /
-RUN bash /qemu.sh i386 linux
+RUN bash /qemu.sh i386
 
 COPY musl.sh /
 RUN CC=gcc \

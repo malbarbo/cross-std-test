@@ -14,7 +14,7 @@ RUN bash /musl-mipsel.sh
 ENV STAGING_DIR=/tmp
 
 COPY qemu.sh /
-RUN bash /qemu.sh mipsel linux
+RUN bash /qemu.sh mipsel
 
 ENV CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER=mipsel-openwrt-linux-gcc \
     CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \

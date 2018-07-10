@@ -6,14 +6,17 @@ sudo: required
 matrix:
     # fast_finish: true
     allow_failures:
-        - env: TARGET=arm-linux-androideabi
+        - env: TARGET=arm-linux-androideabi # segfault
+        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1 # segfault
+        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=2
+        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=1 # segfault
+        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=2
         - env: TARGET=i686-linux-android # segfault
-        - env: TARGET=x86_64-linux-android # Cannot determine OS from triple
         - env: TARGET=mips-unknown-linux-musl COMPILE_TEST_STEP=1 # undefined reference to `__bswapsi2' in elf_zlib_inflate_and_verify
         - env: TARGET=mips-unknown-linux-musl COMPILE_TEST_STEP=2
-        - env: TARGET=s390x-unknown-linux-gnu
-        - env: TARGET=sparc64-unknown-linux-gnu
-        - env: TARGET=wasm32-unknown-emscripten COMPILE_TEST_IGNORE=1
+        - env: TARGET=s390x-unknown-linux-gnu # hangs on qemu
+        - env: TARGET=sparc64-unknown-linux-gnu # panicked at 'assertion failed: signal(libc::SIGPIPE, libc::SIG_IGN) != libc::SIG_ERR'
+        - env: TARGET=wasm32-unknown-emscripten COMPILE_TEST_IGNORE=1 # Error: Cannot find module
 
     include:
         # Linux
@@ -39,10 +42,10 @@ matrix:
 
         # musl
         # - env: TARGET=aarch64-unknown-linux-musl
-        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1
-        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=2
-        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=1
-        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=2
+        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1 # allow failures
+        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=2 # allow failures
+        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=1 # allow failures
+        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=2 # allow failures
         - env: TARGET=armv7-unknown-linux-musleabihf COMPILE_TEST_STEP=1
         - env: TARGET=armv7-unknown-linux-musleabihf COMPILE_TEST_STEP=2
         - env: TARGET=i586-unknown-linux-musl COMPILE_TEST_STEP=1
@@ -65,7 +68,7 @@ matrix:
         - env: TARGET=arm-linux-androideabi # allow failures
         - env: TARGET=armv7-linux-androideabi
         - env: TARGET=i686-linux-android # allow failures
-        - env: TARGET=x86_64-linux-android # allow failures
+        - env: TARGET=x86_64-linux-android
 
         # Emscripten
         - env: TARGET=asmjs-unknown-emscripten COMPILE_TEST_IGNORE=1

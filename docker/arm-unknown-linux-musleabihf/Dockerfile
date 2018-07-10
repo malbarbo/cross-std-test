@@ -12,7 +12,7 @@ RUN apt-get update && \
         make
 
 COPY qemu.sh /
-RUN bash /qemu.sh arm linux
+RUN bash /qemu.sh arm
 
 COPY musl.sh /
 RUN CC=arm-linux-gnueabihf-gcc \

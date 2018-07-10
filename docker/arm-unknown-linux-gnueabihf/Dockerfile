@@ -14,7 +14,7 @@ RUN bash /toolchain-armhf.sh
 ENV PATH="$PATH:/gcc/bin"
 
 COPY qemu.sh /
-RUN bash /qemu.sh arm linux
+RUN bash /qemu.sh arm
 
 ENV CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gcc \
     CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_RUNNER=qemu-arm \

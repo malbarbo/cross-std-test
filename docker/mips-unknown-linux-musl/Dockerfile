@@ -14,7 +14,7 @@ RUN bash /musl-mips.sh
 ENV STAGING_DIR=/tmp
 
 COPY qemu.sh /
-RUN bash /qemu.sh mips linux
+RUN bash /qemu.sh mips
 
 ENV CARGO_TARGET_MIPS_UNKNOWN_LINUX_MUSL_LINKER=mips-openwrt-linux-gcc \
     CC_mips_unknown_linux_musl=mips-openwrt-linux-gcc \
