@@ -16,7 +16,7 @@ RUN bash /qemu.sh arm
 
 COPY musl.sh /
 RUN CC=arm-linux-gnueabi-gcc \
-    CFLAGS="-march=armv6" \
+    CFLAGS="-march=armv6 -marm" \
     bash /musl.sh arm
 
 ENV CARGO_TARGET_ARM_UNKNOWN_LINUX_MUSLEABI_LINKER=/musl-arm/bin/musl-gcc \
