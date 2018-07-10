@@ -7,13 +7,10 @@ matrix:
     # fast_finish: true
     allow_failures:
         - env: TARGET=arm-linux-androideabi # segfault
-        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1 # segfault
-        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=2
-        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=1 # segfault
-        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=2
+        - env: TARGET=arm-unknown-linux-musleabi # segfault
+        - env: TARGET=arm-unknown-linux-musleabihf # segfault
         - env: TARGET=i686-linux-android # segfault
-        - env: TARGET=mips-unknown-linux-musl COMPILE_TEST_STEP=1 # undefined reference to `__bswapsi2' in elf_zlib_inflate_and_verify
-        - env: TARGET=mips-unknown-linux-musl COMPILE_TEST_STEP=2
+        - env: TARGET=mips-unknown-linux-musld # undefined reference to `__bswapsi2' in elf_zlib_inflate_and_verify
         - env: TARGET=s390x-unknown-linux-gnu # hangs on qemu
         - env: TARGET=sparc64-unknown-linux-gnu # panicked at 'assertion failed: signal(libc::SIGPIPE, libc::SIG_IGN) != libc::SIG_ERR'
         - env: TARGET=wasm32-unknown-emscripten COMPILE_TEST_IGNORE=1 # Error: Cannot find module
@@ -42,22 +39,14 @@ matrix:
 
         # musl
         # - env: TARGET=aarch64-unknown-linux-musl
-        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=1 # allow failures
-        - env: TARGET=arm-unknown-linux-musleabi COMPILE_TEST_STEP=2 # allow failures
-        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=1 # allow failures
-        - env: TARGET=arm-unknown-linux-musleabihf COMPILE_TEST_STEP=2 # allow failures
-        - env: TARGET=armv7-unknown-linux-musleabihf COMPILE_TEST_STEP=1
-        - env: TARGET=armv7-unknown-linux-musleabihf COMPILE_TEST_STEP=2
-        - env: TARGET=i586-unknown-linux-musl COMPILE_TEST_STEP=1
-        - env: TARGET=i586-unknown-linux-musl COMPILE_TEST_STEP=2
-        - env: TARGET=i686-unknown-linux-musl COMPILE_TEST_STEP=1
-        - env: TARGET=i686-unknown-linux-musl COMPILE_TEST_STEP=2
-        - env: TARGET=mips-unknown-linux-musl COMPILE_TEST_STEP=1 # allow failures
-        - env: TARGET=mips-unknown-linux-musl COMPILE_TEST_STEP=2 # allow failures
-        - env: TARGET=mipsel-unknown-linux-musl COMPILE_TEST_STEP=1
-        - env: TARGET=mipsel-unknown-linux-musl COMPILE_TEST_STEP=2
-        - env: TARGET=x86_64-unknown-linux-musl COMPILE_TEST_STEP=1
-        - env: TARGET=x86_64-unknown-linux-musl COMPILE_TEST_STEP=2
+        - env: TARGET=arm-unknown-linux-musleabi # allow failures
+        - env: TARGET=arm-unknown-linux-musleabihf # allow failures
+        - env: TARGET=armv7-unknown-linux-musleabihf
+        - env: TARGET=i586-unknown-linux-musl
+        - env: TARGET=i686-unknown-linux-musl
+        - env: TARGET=mips-unknown-linux-musl # allow failures
+        - env: TARGET=mipsel-unknown-linux-musl
+        - env: TARGET=x86_64-unknown-linux-musl
 
         # uclibc
         # - env: TARGET=mips-unknown-linux-uclibc
@@ -75,10 +64,8 @@ matrix:
         - env: TARGET=wasm32-unknown-emscripten COMPILE_TEST_IGNORE=1 # allow failures
 
         # Windows
-        - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=1
-        - env: TARGET=i686-pc-windows-gnu COMPILE_TEST_STEP=2
-        - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=1
-        - env: TARGET=x86_64-pc-windows-gnu COMPILE_TEST_STEP=2
+        - env: TARGET=i686-pc-windows-gnu
+        - env: TARGET=x86_64-pc-windows-gnu
 
         # BSD
         # - env: TARGET=aarch64-unknown-freebsd
