@@ -164,6 +164,12 @@ general = {
     'armv7-unknown-linux-musleabihf': [
         'ptr::write_unaligned_drop', # panicked at 'already borrowed: BorrowMutError'
         'fs::tests::concurrent_recursive_mkdir', # segfault
+        'io::buffered::tests::dont_panic_in_drop_on_panicked_flush', # segfault
+        'io::buffered::tests::panic_in_write_doesnt_flush_in_drop', # segfault
+        'io::stdio::tests::panic_doesnt_poison', # segfault
+        'net::tcp::tests', # segfault
+        'net::udp::tests', # segfault
+        'sync::barrier::tests::test_barrier',
     ],
     'i586-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
@@ -198,8 +204,10 @@ general = {
         'f64::tests::test_float_bits_conv',
     ],
     'powerpc-unknown-linux-gnu': [
+        'num::u8::tests::test_reverse_bits', # illegal instruction
         'num::u16::tests::test_reverse_bits', # illegal instruction
         'num::u32::tests::test_reverse_bits', # illegal instruction
+        'num::u64::tests::test_reverse_bits', # illegal instruction
     ],
     'powerpc64le-unknown-linux-gnu': [
         'iter::test_lt', # assertion failed: a.iter().gt(b.iter()) == (a[0] > b[0])
