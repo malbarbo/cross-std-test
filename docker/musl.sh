@@ -30,16 +30,23 @@ exit 1
 TAG=$1
 shift
 
-MUSL=musl-1.1.18
-# export CFLAGS="-fPIC $CFLAGS"
+export CFLAGS="-fPIC $CFLAGS"
+
+MUSL=musl-1.1.19
+
+apt-get install patch
 
 # may have been downloaded in a previous run
 if [ ! -d $MUSL ]; then
   curl https://www.musl-libc.org/releases/$MUSL.tar.gz | tar xzf -
+  cd $MUSL && \
+    curl "https://git.musl-libc.org/cgit/musl/patch/?id=610c5a8524c3d6cd3ac5a5f1231422e7648a3791" |\
+    patch -p1 && \
+    cd -
 fi
 
 cd $MUSL
-./configure --disable-shared --prefix=/musl-$TAG $@
+./configure --enable-optimize --enable-debug --disable-shared --prefix=/musl-$TAG $@
 if [ "$TAG" = "i586" -o "$TAG" = "i686" ]; then
   hide_output make -j$(nproc) AR=ar RANLIB=ranlib
 else
