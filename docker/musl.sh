@@ -34,7 +34,7 @@ export CFLAGS="-fPIC $CFLAGS"
 
 MUSL=musl-1.1.19
 
-apt-get install patch
+apt-get install -y patch curl
 
 # may have been downloaded in a previous run
 if [ ! -d $MUSL ]; then

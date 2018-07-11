@@ -148,6 +148,10 @@ general = {
     'aarch64-linux-android': [
         'collections::hash::map::test_map::test_create_capacity_zero', # panicked at 'assertion failed: m.contains_key(&1)'
     ],
+    'aarch64-unknown-linux-musl': [
+        'collections::hash::map::test_map::test_create_capacity_zero', # panicked at 'assertion failed: m.contains_key(&1)'
+        'collections::hash::set::test_set::test_intersection', # assertion failed: `(left == right), left: 3, right: 4
+    ],
     'arm-linux-androideabi': [
         'sync::mutex::tests::test_mutex_unsized', # SIGSEGV
     ],
@@ -169,7 +173,12 @@ general = {
         'io::stdio::tests::panic_doesnt_poison', # segfault
         'net::tcp::tests', # segfault
         'net::udp::tests', # segfault
-        'sync::barrier::tests::test_barrier',
+        'sync', # segfault
+        'sys::unix::ext::net::test', # segfault
+        'sys_common::remutex::tests', # segfault
+        'sys_common::wtf8::tests', # segfault
+        'thread::local::tests',
+        'thread::tests',
     ],
     'i586-unknown-linux-gnu': [
         'f32::tests::test_float_bits_conv',
@@ -413,6 +422,11 @@ general_run_pass = {
     'aarch64-linux-android': [
         'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
         'simd-intrinsic-generic-reduction.rs', #LLVM ERROR: Cannot select: 0x7f7fec029c30: i32 = vecreduce_mul 0x7f7fec029c98
+    ],
+    'x86_64-unknown-linux-gnux32': [
+        'try-wait.rs',
+        'core-run-destroy.rs',
+        'issue-33770.rs',
     ],
 }
 
