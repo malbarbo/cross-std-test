@@ -6,147 +6,63 @@ import sys
 
 def main():
     target = sys.argv[1]
-
-    # skip in all targets
+    skip(build_list(target, TESTS))
     skip_compile_test(
-        [
-            'async-await.rs',
-            'compiletest-skip-codegen.rs',
-            'issue-44056.rs',
-            'rfc-2126-extern-absolute-paths/basic.rs',
-            'simd-intrinsic-float-minmax.rs',
-            'using-target-feature-unstable.rs',
-        ],
-        [
-            'rfc-1937-termination-trait/termination-trait-for-box-dyn-error.rs',
-            'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
-            'rfc-1937-termination-trait/termination-trait-for-str.rs',
-        ]
-    )
-
-    if not is_native(target):
-        skip(qemu)
-        skip_compile_test(qemu_run_pass, qemu_run_fail)
-
-    if 'android' in target:
-        skip(android)
-        skip_compile_test(android_run_pass)
-
-    if 'musl' in target:
-        skip_compile_test(musl_run_pass)
-
-    if 'windows' in target:
-        skip(windows)
-        skip_compile_test(windows_run_pass, windows_run_fail)
-
-    if target in general:
-        skip(general[target])
-
-    if target in general_run_pass:
-        skip_compile_test(general_run_pass[target])
-
+        build_list(target, RUN_PASS),
+        build_list(target, RUN_FAIL))
     run_pass_step()
 
 
-def run_pass_path():
-    return os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/'
+ALL = ''
 
-
-def run_pass_step():
-    step = os.environ.get('COMPILE_TEST_STEP')
-    files = [f for f in os.listdir(run_pass_path()) if 'auxiliary' not in f]
-    files.sort(key=lambda x: x.replace('_', '-'))
-    half = int(len(files) / 2)
-    if step == '1':
-        skip_compile_test(files[half:])
-    elif step == '2':
-        skip_compile_test(files[:half])
-
-
-qemu = [
-    'net::tcp::tests::multiple_connect_interleaved_greedy_schedule',
-    'net::tcp::tests::multiple_connect_interleaved_lazy_schedule',
-    'net::tcp::tests::timeouts',
-    'net::udp::tests::timeouts',
-    'process::tests::uid_to_root_fails',
-    'process::tests::uid_works',
-    'sys::unix::ext::net::test::timeouts',
-    'collections::hash::map::test_map::test_lots_of_insertions', # takes too long
-    'stress',
-]
-
-qemu_run_pass = [
-    'backtrace-debuginfo.rs',
-    'backtrace.rs',
-    'command-before-exec.rs',
-    'command-exec.rs',
-    'env-args-reverse-iterator.rs',
-    'env-funky-keys.rs',  # QEMU_LD_PREFIX is empty
-    'fds-are-cloexec.rs',
-    'issue-13304.rs',
-    'issue-14456.rs',
-    'issue-14940.rs',
-    'issue-16272.rs',
-    'issue-20091.rs',
-    'issue-24313.rs',
-    'issue-30490.rs',
-    'multi-panic.rs',
-    'no-stdio.rs',
-    'out-of-stack.rs',
-    'panic-runtime/lto-unwind.rs',
-    'print-stdout-eprint-stderr.rs',
-    'process-sigpipe.rs',
-    'process-spawn-with-unicode-params.rs',
-    'process-status-inherits-stdin.rs',
-    'segfault-no-out-of-stack.rs',
-    'signal-exit-status.rs',
-    'sigpipe-should-be-ignored.rs',
-    'simd-target-feature-mixup.rs', # target_feature does not work on qemu
-    'stack-probes-lto.rs',
-    'stack-probes.rs',
-    'stdio-is-blocking.rs',
-    'try-wait.rs',
-]
-
-qemu_run_fail = []
-
-# Exec format error
-android = [
-    'process::tests::test_add_to_env',
-    'process::tests::test_capture_env_at_spawn',
-    'process::tests::test_inherit_env',
-    'process::tests::test_override_env',
-]
-
-windows = [
-    'fs::tests::copy_file_preserves_streams',
-    'fs::tests::copy_file_returns_metadata_len',
-    'fs::tests::create_dir_all_with_junctions',
-    'fs::tests::fchmod_works',
-    'fs::tests::read_link',
-    'fs::tests::realpath_works',
-    'fs::tests::realpath_works_tricky',
-    'fs::tests::recursive_rmdir',
-    'fs::tests::recursive_rmdir_of_symlink',
-    'fs::tests::symlink_noexist',
-    'fs::tests::symlinks_work',
-    'fs::tests::truncate_works',
-    'fs::tests::unicode_path_exists',
-    'fs::tests::unicode_path_is_dir',
-    'net::tcp::tests::bind_error',
-    'net::tcp::tests::close_readwrite_smoke',
-    'net::tcp::tests::fast_rebind',
-    'net::tcp::tests::shutdown_smoke',
-    'net::udp::tests::bind_error',
-    'process::tests::test_add_to_env', # hangs
-    'process::tests::test_creation_flags',
-    'process::tests::test_override_env', # hangs
-    'sys::windows::os::tests::ntstatus_error',
-]
-
-general = {
+TESTS = {
+    'android': [
+        # Exec format error
+        'process::tests::test_add_to_env',
+        'process::tests::test_capture_env_at_spawn',
+        'process::tests::test_inherit_env',
+        'process::tests::test_override_env',
+    ],
+    'qemu': [
+        'net::tcp::tests::multiple_connect_interleaved_greedy_schedule',
+        'net::tcp::tests::multiple_connect_interleaved_lazy_schedule',
+        'net::tcp::tests::timeouts',
+        'net::udp::tests::timeouts',
+        'process::tests::uid_to_root_fails',
+        'process::tests::uid_works',
+        'sys::unix::ext::net::test::timeouts',
+        'collections::hash::map::test_map::test_lots_of_insertions', # takes too long
+        'stress',
+    ],
+    'windows': [
+        'fs::tests::copy_file_preserves_streams',
+        'fs::tests::copy_file_returns_metadata_len',
+        'fs::tests::create_dir_all_with_junctions',
+        'fs::tests::fchmod_works',
+        'fs::tests::read_link',
+        'fs::tests::realpath_works',
+        'fs::tests::realpath_works_tricky',
+        'fs::tests::recursive_rmdir',
+        'fs::tests::recursive_rmdir_of_symlink',
+        'fs::tests::symlink_noexist',
+        'fs::tests::symlinks_work',
+        'fs::tests::truncate_works',
+        'fs::tests::unicode_path_exists',
+        'fs::tests::unicode_path_is_dir',
+        'net::tcp::tests::bind_error',
+        'net::tcp::tests::close_readwrite_smoke',
+        'net::tcp::tests::fast_rebind',
+        'net::tcp::tests::shutdown_smoke',
+        'net::udp::tests::bind_error',
+        'process::tests::test_add_to_env', # hangs
+        'process::tests::test_creation_flags',
+        'process::tests::test_override_env', # hangs
+        'sys::windows::os::tests::ntstatus_error',
+    ],
     'aarch64-linux-android': [
         'collections::hash::map::test_map::test_create_capacity_zero', # panicked at 'assertion failed: m.contains_key(&1)'
+        'thread::tests::test_named_thread',
+        'thread::tests::test_join_panic',
     ],
     'aarch64-unknown-linux-musl': [
         'collections::hash::map::test_map::test_create_capacity_zero', # panicked at 'assertion failed: m.contains_key(&1)'
@@ -223,17 +139,6 @@ general = {
         'option::test_ord', # assertion failed: !(nan > big)
         'tuple::test_tuple_cmp', # assertion failed: !((1.0f64, 2.0f64) > (nan, 3.0))
     ],
-    'x86_64-linux-android': [
-        'env::tests::join_paths_unix1', # hangs
-        'fs::tests::open_flavors', # thread '<unnamed>' panicked at '`Invalid argument (os error 22)` did not contain `Invalid argument`
-        'iter::test_min_by_key', # SIGILL
-        'net::ip::tests::cmp', # assertion failed: v61 < v62
-        'net::ip::tests::ip_properties', # left: `true`, right: `false`
-        'net::ip::tests::ipv6_properties', # left: `true`, right: `false`
-        'num::i16::tests::test_count_ones', # SIGILL
-        'process::tests::test_inherit_env', # thread '<unnamed>' panicked at 'output doesn't contain `XARGO_HOME=/xargo`
-        'vec_deque::tests::test_shrink_to_fit', # SIGILL
-    ],
     'x86_64-unknown-linux-gnux32': [
         'net::tcp::tests::timeouts', # left: `8`, right: `16`
         'net::udp::tests::timeouts', # left: `8`, right: `16`
@@ -244,63 +149,92 @@ general = {
     ],
 }
 
-# Exec format error
-android_run_pass = [
-    'abort-on-c-abi.rs',
-    'atomic-print.rs',
-    'core-run-destroy.rs',
-    'issue-10626.rs',
-    'issue-33770.rs',
-    'panic-runtime/abort-link-to-unwinding-crates.rs',
-    'panic-runtime/abort.rs',
-    'panic-runtime/lto-abort.rs',
-    'process-envs.rs',
-    'process-exit.rs',
-    'process-remove-from-env.rs',
-    'running-with-no-runtime.rs',
-]
-
-# Exec format error
-musl_run_pass = [
-    'abort-on-c-abi.rs',
-    'atomic-print.rs',
-    'crt-static-off-works.rs',
-    'issue-10626.rs',
-    'issue-12133-3.rs',
-    'issue-33770.rs',
-    'panic-runtime/abort-link-to-unwinding-crates.rs',
-    'panic-runtime/abort.rs',
-    'panic-runtime/lto-abort.rs',
-    'process-exit.rs',
-    'running-with-no-runtime.rs',
-]
-
-windows_run_pass = [
-    'abort-on-c-abi.rs',
-    'backtrace-debuginfo.rs',
-    'backtrace.rs',
-    'cci_capture_clause.rs',
-    'env-home-dir.rs',
-    'issue-13304.rs',
-    'issue-14456.rs', # hangs
-    'no-stdio.rs',
-    'out-of-stack.rs',
-    'process-spawn-with-unicode-params.rs',
-    'process-status-inherits-stdin.rs',
-    'segfault-no-out-of-stack.rs',
-    'stack-probes-lto.rs',
-    'stack-probes.rs',
-]
-
-windows_run_fail = [
-    'args-panic.rs',
-    'run-unexported-tests.rs',
-    'test-panic.rs',
-    'test-should-fail-bad-message.rs',
-    'test-should-panic-no-message.rs',
-]
-
-general_run_pass = {
+RUN_PASS = {
+    ALL: [
+        'async-await.rs',
+        'compiletest-skip-codegen.rs',
+        'issue-44056.rs',
+        'rfc-2126-extern-absolute-paths/basic.rs',
+        'simd-intrinsic-float-minmax.rs',
+        'using-target-feature-unstable.rs',
+    ],
+    'android': [
+        # Exec format error
+        'abort-on-c-abi.rs',
+        'atomic-print.rs',
+        'core-run-destroy.rs',
+        'issue-10626.rs',
+        'issue-33770.rs',
+        'panic-runtime/abort-link-to-unwinding-crates.rs',
+        'panic-runtime/abort.rs',
+        'panic-runtime/lto-abort.rs',
+        'process-envs.rs',
+        'process-exit.rs',
+        'process-remove-from-env.rs',
+        'running-with-no-runtime.rs',
+    ],
+    'musl': [
+        # Exec format error
+        'abort-on-c-abi.rs',
+        'atomic-print.rs',
+        'crt-static-off-works.rs',
+        'issue-10626.rs',
+        'issue-12133-3.rs',
+        'issue-33770.rs',
+        'panic-runtime/abort-link-to-unwinding-crates.rs',
+        'panic-runtime/abort.rs',
+        'panic-runtime/lto-abort.rs',
+        'process-exit.rs',
+        'running-with-no-runtime.rs',
+    ],
+    'qemu': [
+        'backtrace-debuginfo.rs',
+        'backtrace.rs',
+        'command-before-exec.rs',
+        'command-exec.rs',
+        'env-args-reverse-iterator.rs',
+        'env-funky-keys.rs',  # QEMU_LD_PREFIX is empty
+        'fds-are-cloexec.rs',
+        'issue-13304.rs',
+        'issue-14456.rs',
+        'issue-14940.rs',
+        'issue-16272.rs',
+        'issue-20091.rs',
+        'issue-24313.rs',
+        'issue-30490.rs',
+        'multi-panic.rs',
+        'no-stdio.rs',
+        'out-of-stack.rs',
+        'panic-runtime/lto-unwind.rs',
+        'print-stdout-eprint-stderr.rs',
+        'process-sigpipe.rs',
+        'process-spawn-with-unicode-params.rs',
+        'process-status-inherits-stdin.rs',
+        'segfault-no-out-of-stack.rs',
+        'signal-exit-status.rs',
+        'sigpipe-should-be-ignored.rs',
+        'simd-target-feature-mixup.rs', # target_feature does not work on qemu
+        'stack-probes-lto.rs',
+        'stack-probes.rs',
+        'stdio-is-blocking.rs',
+        'try-wait.rs',
+    ],
+    'windows': [
+        'abort-on-c-abi.rs',
+        'backtrace-debuginfo.rs',
+        'backtrace.rs',
+        'cci_capture_clause.rs',
+        'env-home-dir.rs',
+        'issue-13304.rs',
+        'issue-14456.rs', # hangs
+        'no-stdio.rs',
+        'out-of-stack.rs',
+        'process-spawn-with-unicode-params.rs',
+        'process-status-inherits-stdin.rs',
+        'segfault-no-out-of-stack.rs',
+        'stack-probes-lto.rs',
+        'stack-probes.rs',
+    ],
     'aarch64-unknown-linux-gnu': [
         'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
         'simd-intrinsic-generic-reduction.rs', #LLVM ERROR: Cannot select: 0x7f7fec029c30: i32 = vecreduce_mul 0x7f7fec029c98
@@ -428,7 +362,38 @@ general_run_pass = {
         'core-run-destroy.rs',
         'issue-33770.rs',
     ],
+
 }
+
+RUN_FAIL = {
+    ALL: [
+        'rfc-1937-termination-trait/termination-trait-for-box-dyn-error.rs',
+        'rfc-1937-termination-trait/termination-trait-for-result-box-error_err.rs',
+        'rfc-1937-termination-trait/termination-trait-for-str.rs',
+    ],
+    'windows': [
+        'args-panic.rs',
+        'run-unexported-tests.rs',
+        'test-panic.rs',
+        'test-should-fail-bad-message.rs',
+        'test-should-panic-no-message.rs',
+    ]
+}
+
+
+def run_pass_path():
+    return os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-pass/'
+
+
+def run_pass_step():
+    step = os.environ.get('COMPILE_TEST_STEP')
+    files = [f for f in os.listdir(run_pass_path()) if 'auxiliary' not in f]
+    files.sort(key=lambda x: x.replace('_', '-'))
+    half = int(len(files) / 2)
+    if step == '1':
+        skip_compile_test(files[half:])
+    elif step == '2':
+        skip_compile_test(files[:half])
 
 
 def is_native(target):
@@ -442,9 +407,11 @@ def skip(cases):
         print(" --skip ", end="")
         print(" --skip ".join(cases), end="")
 
+
 def skip_compile_test(pass_, fail = []):
     skip_(pass_, 'pass')
     skip_(fail, 'fail')
+
 
 def skip_(cases, kind):
     dir = os.path.dirname(sys.argv[0]) + '/../compile-test/tests/run-{}/'.format(kind)
@@ -457,6 +424,14 @@ def skip_(cases, kind):
             os.rename(dir + case, to)
         except:
             pass
+
+def build_list(target, lst):
+    tests = []
+    for x, values in lst.items():
+        if x in target or (x == 'qemu' and not is_native(target)):
+            tests.extend(values)
+    return tests
+
 
 if __name__ == "__main__":
     main()
