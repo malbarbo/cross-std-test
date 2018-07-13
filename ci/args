@@ -61,8 +61,8 @@ TESTS = {
     ],
     'aarch64-linux-android': [
         'collections::hash::map::test_map::test_create_capacity_zero', # panicked at 'assertion failed: m.contains_key(&1)'
-        'thread::tests::test_named_thread',
         'thread::tests::test_join_panic',
+        'thread::tests::test_park_timeout_unpark_called_other_thread',
     ],
     'aarch64-unknown-linux-musl': [
         'collections::hash::map::test_map::test_create_capacity_zero', # panicked at 'assertion failed: m.contains_key(&1)'
@@ -177,9 +177,9 @@ RUN_PASS = {
         # Exec format error
         'abort-on-c-abi.rs',
         'atomic-print.rs',
-        'crt-static-off-works.rs',
+        #'crt-static-off-works.rs',
         'issue-10626.rs',
-        'issue-12133-3.rs',
+        #'issue-12133-3.rs',
         'issue-33770.rs',
         'panic-runtime/abort-link-to-unwinding-crates.rs',
         'panic-runtime/abort.rs',
@@ -220,20 +220,20 @@ RUN_PASS = {
         'try-wait.rs',
     ],
     'windows': [
-        'abort-on-c-abi.rs',
-        'backtrace-debuginfo.rs',
-        'backtrace.rs',
-        'cci_capture_clause.rs',
-        'env-home-dir.rs',
-        'issue-13304.rs',
-        'issue-14456.rs', # hangs
-        'no-stdio.rs',
-        'out-of-stack.rs',
-        'process-spawn-with-unicode-params.rs',
-        'process-status-inherits-stdin.rs',
-        'segfault-no-out-of-stack.rs',
-        'stack-probes-lto.rs',
-        'stack-probes.rs',
+        'abort-on-c-abi.rs', # over 60 seconds
+        #'backtrace-debuginfo.rs',
+        #'backtrace.rs',
+        #'cci_capture_clause.rs',
+        'env-home-dir.rs', # thread 'main' panicked at 'failed to remove environment variable `"HOME"`: Environment variable not found. (os error 203)
+        'issue-13304.rs', # thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 233, kind: Other, message: "Pipe not connected." }. thread 'main' panicked at 'assertion failed: out.status.success()', tests/run-pass/issue-13304.rs:39:5
+        'issue-14456.rs', # over 60 seconds
+        'no-stdio.rs', # thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 0, kind: Other, message: "Success." }'
+        'out-of-stack.rs', # err:seh:setup_exception_record stack overflow 1648 bytes in thread 0036 eip 7bc462e6 esp 00670cc0 stack 0x670000-0x671000-0x870000. thread 'main' panicked at 'missing overflow message: thread 'main' panicked at 'called `Option::unwrap()` on a `None` value'
+        'process-spawn-with-unicode-params.rs', # thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 3, kind: NotFound, message: "Path not found." }'
+        'process-status-inherits-stdin.rs', # thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 233, kind: Other, message: "Pipe not connected." }
+        #'segfault-no-out-of-stack.rs',
+        'stack-probes-lto.rs', # err:seh:setup_exception_record stack overflow 1040 bytes in threa
+        'stack-probes.rs', # err:seh:setup_exception_record stack overflow 832 bytes in thread
     ],
     'aarch64-unknown-linux-gnu': [
         'struct-path-self.rs', # left: `0`, right: `1`', tests/run-pass/struct-path-self.rs:49:5
@@ -376,6 +376,7 @@ RUN_FAIL = {
         'run-unexported-tests.rs',
         'test-panic.rs',
         'test-should-fail-bad-message.rs',
+        'test-should-panic-bad-message.rs',
         'test-should-panic-no-message.rs',
     ]
 }
