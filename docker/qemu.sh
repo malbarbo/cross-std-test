@@ -32,7 +32,7 @@ main() {
 
     pushd $td
 
-    curl -L http://wiki.qemu-project.org/download/qemu-$version.tar.bz2 | \
+    curl -L https://download.qemu.org/qemu-$version.tar.bz2 | \
         tar --strip-components=1 -xj
 
     ./configure \
